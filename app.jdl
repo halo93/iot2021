@@ -1,5 +1,10 @@
+enum Type {
+  SENSOR,PROCESSOR,OTHERS
+}
+
 entity Device (devices) {
   name String,
   producer String,
-  version String
+  version String,
+  type Type required,
 }
