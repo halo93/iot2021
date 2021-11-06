@@ -1,0 +1,5 @@
+entity Device (devices) {
+  name String,
+  producer String,
+  version String
+}

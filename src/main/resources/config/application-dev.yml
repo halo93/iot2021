@@ -32,13 +32,19 @@ spring:
       indent-output: true
   data:
     mongodb:
-      uri: mongodb://localhost:27017
-      database: iot_project
+      uri: mongodb+srv://admin:admin@cluster0.czzba.mongodb.net/
+      database: iot_2021
   mail:
-    host: localhost
-    port: 25
-    username:
-    password:
+    host: smtp.gmail.com
+    port: 587
+    username: genial.iot.2021
+    password: Aa@123456789
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   messages:
     cache-duration: PT1S # 1 second, see the ISO 8601 standard
   thymeleaf:
