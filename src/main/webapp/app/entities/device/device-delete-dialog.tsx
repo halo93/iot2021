@@ -20,7 +20,7 @@ export const DeviceDeleteDialog = (props: RouteComponentProps<{ id: string }>) =
   const updateSuccess = useAppSelector(state => state.device.updateSuccess);
 
   const handleClose = () => {
-    props.history.push('/device');
+    props.history.push('/device' + props.location.search);
   };
 
   useEffect(() => {

@@ -22,7 +22,7 @@ export const DeviceUpdate = (props: RouteComponentProps<{ id: string }>) => {
   const updateSuccess = useAppSelector(state => state.device.updateSuccess);
   const typeValues = Object.keys(DeviceType);
   const handleClose = () => {
-    props.history.push('/device');
+    props.history.push('/device' + props.location.search);
   };
 
   useEffect(() => {
@@ -76,9 +76,36 @@ export const DeviceUpdate = (props: RouteComponentProps<{ id: string }>) => {
           ) : (
             <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
               {!isNew ? <ValidatedField name="id" required readOnly id="device-id" label="ID" validate={{ required: true }} /> : null}
-              <ValidatedField label="Name" id="device-name" name="name" data-cy="name" type="text" />
-              <ValidatedField label="Producer" id="device-producer" name="producer" data-cy="producer" type="text" />
-              <ValidatedField label="Version" id="device-version" name="version" data-cy="version" type="text" />
+              <ValidatedField
+                label="Name"
+                id="device-name"
+                name="name"
+                data-cy="name"
+                type="text"
+                validate={{
+                  required: { value: true, message: 'This field is required.' },
+                }}
+              />
+              <ValidatedField
+                label="Producer"
+                id="device-producer"
+                name="producer"
+                data-cy="producer"
+                type="text"
+                validate={{
+                  required: { value: true, message: 'This field is required.' },
+                }}
+              />
+              <ValidatedField
+                label="Version"
+                id="device-version"
+                name="version"
+                data-cy="version"
+                type="text"
+                validate={{
+                  required: { value: true, message: 'This field is required.' },
+                }}
+              />
               <ValidatedField label="Type" id="device-type" name="type" data-cy="type" type="select">
                 {typeValues.map(type => (
                   <option value={type} key={type}>

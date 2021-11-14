@@ -3,8 +3,12 @@ enum Type {
 }
 
 entity Device (devices) {
-  name String,
-  producer String,
-  version String,
+  name String required,
+  producer String required,
+  version String required,
   type Type required,
 }
+
+dto * with mapstruct
+paginate * with pagination
+service * with serviceClass

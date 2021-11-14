@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.genial.iot.IntegrationTest;
 import com.genial.iot.domain.Device;
 import com.genial.iot.repository.DeviceRepository;
+import com.genial.iot.service.dto.DeviceDTO;
+import com.genial.iot.service.mapper.DeviceMapper;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,6 +45,9 @@ class DeviceResourceIT {
 
     @Autowired
     private DeviceRepository deviceRepository;
+
+    @Autowired
+    private DeviceMapper deviceMapper;
 
     @Autowired
     private MockMvc restDeviceMockMvc;
@@ -81,8 +86,9 @@ class DeviceResourceIT {
     void createDevice() throws Exception {
         int databaseSizeBeforeCreate = deviceRepository.findAll().size();
         // Create the Device
+        DeviceDTO deviceDTO = deviceMapper.toDto(device);
         restDeviceMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(device)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(deviceDTO)))
             .andExpect(status().isCreated());
 
         // Validate the Device in the database
@@ -99,17 +105,69 @@ class DeviceResourceIT {
     void createDeviceWithExistingId() throws Exception {
         // Create the Device with an existing ID
         device.setId("existing_id");
+        DeviceDTO deviceDTO = deviceMapper.toDto(device);
 
         int databaseSizeBeforeCreate = deviceRepository.findAll().size();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restDeviceMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(device)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(deviceDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the Device in the database
         List<Device> deviceList = deviceRepository.findAll();
         assertThat(deviceList).hasSize(databaseSizeBeforeCreate);
+    }
+
+    @Test
+    void checkNameIsRequired() throws Exception {
+        int databaseSizeBeforeTest = deviceRepository.findAll().size();
+        // set the field null
+        device.setName(null);
+
+        // Create the Device, which fails.
+        DeviceDTO deviceDTO = deviceMapper.toDto(device);
+
+        restDeviceMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(deviceDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Device> deviceList = deviceRepository.findAll();
+        assertThat(deviceList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    void checkProducerIsRequired() throws Exception {
+        int databaseSizeBeforeTest = deviceRepository.findAll().size();
+        // set the field null
+        device.setProducer(null);
+
+        // Create the Device, which fails.
+        DeviceDTO deviceDTO = deviceMapper.toDto(device);
+
+        restDeviceMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(deviceDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Device> deviceList = deviceRepository.findAll();
+        assertThat(deviceList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    void checkVersionIsRequired() throws Exception {
+        int databaseSizeBeforeTest = deviceRepository.findAll().size();
+        // set the field null
+        device.setVersion(null);
+
+        // Create the Device, which fails.
+        DeviceDTO deviceDTO = deviceMapper.toDto(device);
+
+        restDeviceMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(deviceDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Device> deviceList = deviceRepository.findAll();
+        assertThat(deviceList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -119,9 +177,10 @@ class DeviceResourceIT {
         device.setType(null);
 
         // Create the Device, which fails.
+        DeviceDTO deviceDTO = deviceMapper.toDto(device);
 
         restDeviceMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(device)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(deviceDTO)))
             .andExpect(status().isBadRequest());
 
         List<Device> deviceList = deviceRepository.findAll();
@@ -178,12 +237,13 @@ class DeviceResourceIT {
         // Update the device
         Device updatedDevice = deviceRepository.findById(device.getId()).get();
         updatedDevice.name(UPDATED_NAME).producer(UPDATED_PRODUCER).version(UPDATED_VERSION).type(UPDATED_TYPE);
+        DeviceDTO deviceDTO = deviceMapper.toDto(updatedDevice);
 
         restDeviceMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, updatedDevice.getId())
+                put(ENTITY_API_URL_ID, deviceDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(updatedDevice))
+                    .content(TestUtil.convertObjectToJsonBytes(deviceDTO))
             )
             .andExpect(status().isOk());
 
@@ -202,12 +262,15 @@ class DeviceResourceIT {
         int databaseSizeBeforeUpdate = deviceRepository.findAll().size();
         device.setId(UUID.randomUUID().toString());
 
+        // Create the Device
+        DeviceDTO deviceDTO = deviceMapper.toDto(device);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restDeviceMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, device.getId())
+                put(ENTITY_API_URL_ID, deviceDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(device))
+                    .content(TestUtil.convertObjectToJsonBytes(deviceDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -221,12 +284,15 @@ class DeviceResourceIT {
         int databaseSizeBeforeUpdate = deviceRepository.findAll().size();
         device.setId(UUID.randomUUID().toString());
 
+        // Create the Device
+        DeviceDTO deviceDTO = deviceMapper.toDto(device);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restDeviceMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, UUID.randomUUID().toString())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(device))
+                    .content(TestUtil.convertObjectToJsonBytes(deviceDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -240,9 +306,12 @@ class DeviceResourceIT {
         int databaseSizeBeforeUpdate = deviceRepository.findAll().size();
         device.setId(UUID.randomUUID().toString());
 
+        // Create the Device
+        DeviceDTO deviceDTO = deviceMapper.toDto(device);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restDeviceMockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(device)))
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(deviceDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Device in the database
@@ -317,12 +386,15 @@ class DeviceResourceIT {
         int databaseSizeBeforeUpdate = deviceRepository.findAll().size();
         device.setId(UUID.randomUUID().toString());
 
+        // Create the Device
+        DeviceDTO deviceDTO = deviceMapper.toDto(device);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restDeviceMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, device.getId())
+                patch(ENTITY_API_URL_ID, deviceDTO.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(device))
+                    .content(TestUtil.convertObjectToJsonBytes(deviceDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -336,12 +408,15 @@ class DeviceResourceIT {
         int databaseSizeBeforeUpdate = deviceRepository.findAll().size();
         device.setId(UUID.randomUUID().toString());
 
+        // Create the Device
+        DeviceDTO deviceDTO = deviceMapper.toDto(device);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restDeviceMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, UUID.randomUUID().toString())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(device))
+                    .content(TestUtil.convertObjectToJsonBytes(deviceDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -355,9 +430,14 @@ class DeviceResourceIT {
         int databaseSizeBeforeUpdate = deviceRepository.findAll().size();
         device.setId(UUID.randomUUID().toString());
 
+        // Create the Device
+        DeviceDTO deviceDTO = deviceMapper.toDto(device);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restDeviceMockMvc
-            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(device)))
+            .perform(
+                patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(deviceDTO))
+            )
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Device in the database
