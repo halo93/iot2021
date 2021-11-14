@@ -1,3 +1,30 @@
 .footer {
-  height: 50px;
+  padding-top: 0.8rem;
+  position: relative;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: #57616b;
+  color: #aaa;
+}
+
+.footer a {
+  color: #79a05f;
+}
+
+.footer-header {
+  color: White;
+}
+
+.footer-top {
+  margin-left: 16px;
+}
+
+.footer-bottom {
+  background-color: #3f474e;
+}
+
+.footer-copyright p {
+  padding-left: 5px;
+  margin-top: 1rem;
 }

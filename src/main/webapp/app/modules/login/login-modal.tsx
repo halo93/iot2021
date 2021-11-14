@@ -42,8 +42,7 @@ const LoginModal = (props: ILoginModalProps) => {
             <Col md="12">
               <ValidatedField
                 name="username"
-                label="Username"
-                placeholder="Your username"
+                placeholder="Username"
                 required
                 autoFocus
                 data-cy="username"
@@ -55,7 +54,6 @@ const LoginModal = (props: ILoginModalProps) => {
               <ValidatedField
                 name="password"
                 type="password"
-                label="Password"
                 placeholder="Your password"
                 required
                 data-cy="password"
@@ -64,25 +62,41 @@ const LoginModal = (props: ILoginModalProps) => {
                 error={errors.password}
                 isTouched={touchedFields.password}
               />
-              <ValidatedField name="rememberMe" type="checkbox" check label="Remember me" value={true} register={register} />
+              <ValidatedField
+                name="rememberMe"
+                type="checkbox"
+                className="text-right mt-1 mb-1"
+                check
+                label="Remember me"
+                value={true}
+                register={register}
+              />
             </Col>
           </Row>
+
           <div className="mt-1">&nbsp;</div>
-          <Alert color="warning">
-            <Link to="/account/reset/request" data-cy="forgetYourPasswordSelector">
-              Did you forget your password?
-            </Link>
-          </Alert>
-          <Alert color="warning">
-            <span>You don&apos;t have an account yet?</span> <Link to="/account/register">Register a new account</Link>
-          </Alert>
+          <Row className="justify-content-center">
+            <Col md="12">
+              <Button color="primary" type="submit" data-cy="submit" className="btn btn-block">
+                Sign in
+              </Button>
+            </Col>
+          </Row>
+          <Row className="justify-content-center mt-2 mb-1">
+            <Col md="12" className="text-center">
+              <Link to="/account/reset/request" data-cy="forgetYourPasswordSelector">
+                Forgot password?
+              </Link>
+            </Col>
+          </Row>
         </ModalBody>
+
         <ModalFooter>
-          <Button color="secondary" onClick={handleClose} tabIndex={1}>
-            Cancel
-          </Button>{' '}
-          <Button color="primary" type="submit" data-cy="submit">
-            Sign in
+          <Button color="info" type="submit" data-cy="submit" className="btn btn-block">
+            <span>You don&apos;t have an account yet?</span>{' '}
+            <Link to="/account/register" className="text-white">
+              Click Here
+            </Link>
           </Button>
         </ModalFooter>
       </Form>
