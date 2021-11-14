@@ -11,6 +11,7 @@ const initialState: EntityState<IDevice> = {
   entities: [],
   entity: defaultValue,
   updating: false,
+  totalItems: 0,
   updateSuccess: false,
 };
 
@@ -19,7 +20,7 @@ const apiUrl = 'api/devices';
 // Actions
 
 export const getEntities = createAsyncThunk('device/fetch_entity_list', async ({ page, size, sort }: IQueryParams) => {
-  const requestUrl = `${apiUrl}?cacheBuster=${new Date().getTime()}`;
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}&` : '?'}cacheBuster=${new Date().getTime()}`;
   return axios.get<IDevice[]>(requestUrl);
 });
 
@@ -94,6 +95,7 @@ export const DeviceSlice = createEntitySlice({
           ...state,
           loading: false,
           entities: action.payload.data,
+          totalItems: parseInt(action.payload.headers['x-total-count'], 10),
         };
       })
       .addMatcher(isFulfilled(createEntity, updateEntity, partialUpdateEntity), (state, action) => {

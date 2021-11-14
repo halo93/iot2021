@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
-import {} from 'react-jhipster';
+import { TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { getEntity } from './device.reducer';
@@ -41,6 +41,30 @@ export const DeviceDetail = (props: RouteComponentProps<{ id: string }>) => {
             <span id="type">Type</span>
           </dt>
           <dd>{deviceEntity.type}</dd>
+          <dt>
+            <span id="createdBy">Created By</span>
+          </dt>
+          <dd>{deviceEntity.createdBy}</dd>
+          <dt>
+            <span id="createdDate">Created Date</span>
+          </dt>
+          <dd>
+            {deviceEntity.createdDate ? (
+              <TextFormat value={deviceEntity.createdDate} type="date" format={APP_DATE_FORMAT} blankOnInvalid />
+            ) : null}
+          </dd>
+          <dt>
+            <span id="lastModifiedBy">Last Modified By</span>
+          </dt>
+          <dd>{deviceEntity.lastModifiedBy}</dd>
+          <dt>
+            <span id="lastModifiedDate">Last Modified Date</span>
+          </dt>
+          <td>
+            {deviceEntity.lastModifiedDate ? (
+              <TextFormat value={deviceEntity.lastModifiedDate} type="date" format={APP_DATE_FORMAT} blankOnInvalid />
+            ) : null}
+          </td>
         </dl>
         <Button tag={Link} to="/device" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Back</span>

@@ -1,7 +1,8 @@
 package com.genial.iot.web.rest;
 
-import com.genial.iot.domain.Device;
 import com.genial.iot.repository.DeviceRepository;
+import com.genial.iot.service.DeviceService;
+import com.genial.iot.service.dto.DeviceDTO;
 import com.genial.iot.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -13,9 +14,15 @@ import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
 /**
@@ -32,26 +39,29 @@ public class DeviceResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    private final DeviceService deviceService;
+
     private final DeviceRepository deviceRepository;
 
-    public DeviceResource(DeviceRepository deviceRepository) {
+    public DeviceResource(DeviceService deviceService, DeviceRepository deviceRepository) {
+        this.deviceService = deviceService;
         this.deviceRepository = deviceRepository;
     }
 
     /**
      * {@code POST  /devices} : Create a new device.
      *
-     * @param device the device to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new device, or with status {@code 400 (Bad Request)} if the device has already an ID.
+     * @param deviceDTO the deviceDTO to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new deviceDTO, or with status {@code 400 (Bad Request)} if the device has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/devices")
-    public ResponseEntity<Device> createDevice(@Valid @RequestBody Device device) throws URISyntaxException {
-        log.debug("REST request to save Device : {}", device);
-        if (device.getId() != null) {
+    public ResponseEntity<DeviceDTO> createDevice(@Valid @RequestBody DeviceDTO deviceDTO) throws URISyntaxException {
+        log.debug("REST request to save Device : {}", deviceDTO);
+        if (deviceDTO.getId() != null) {
             throw new BadRequestAlertException("A new device cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Device result = deviceRepository.save(device);
+        DeviceDTO result = deviceService.save(deviceDTO);
         return ResponseEntity
             .created(new URI("/api/devices/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId()))
@@ -61,23 +71,23 @@ public class DeviceResource {
     /**
      * {@code PUT  /devices/:id} : Updates an existing device.
      *
-     * @param id the id of the device to save.
-     * @param device the device to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated device,
-     * or with status {@code 400 (Bad Request)} if the device is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the device couldn't be updated.
+     * @param id the id of the deviceDTO to save.
+     * @param deviceDTO the deviceDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated deviceDTO,
+     * or with status {@code 400 (Bad Request)} if the deviceDTO is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the deviceDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/devices/{id}")
-    public ResponseEntity<Device> updateDevice(
+    public ResponseEntity<DeviceDTO> updateDevice(
         @PathVariable(value = "id", required = false) final String id,
-        @Valid @RequestBody Device device
+        @Valid @RequestBody DeviceDTO deviceDTO
     ) throws URISyntaxException {
-        log.debug("REST request to update Device : {}, {}", id, device);
-        if (device.getId() == null) {
+        log.debug("REST request to update Device : {}, {}", id, deviceDTO);
+        if (deviceDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, device.getId())) {
+        if (!Objects.equals(id, deviceDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -85,34 +95,34 @@ public class DeviceResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Device result = deviceRepository.save(device);
+        DeviceDTO result = deviceService.save(deviceDTO);
         return ResponseEntity
             .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, device.getId()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, deviceDTO.getId()))
             .body(result);
     }
 
     /**
      * {@code PATCH  /devices/:id} : Partial updates given fields of an existing device, field will ignore if it is null
      *
-     * @param id the id of the device to save.
-     * @param device the device to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated device,
-     * or with status {@code 400 (Bad Request)} if the device is not valid,
-     * or with status {@code 404 (Not Found)} if the device is not found,
-     * or with status {@code 500 (Internal Server Error)} if the device couldn't be updated.
+     * @param id the id of the deviceDTO to save.
+     * @param deviceDTO the deviceDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated deviceDTO,
+     * or with status {@code 400 (Bad Request)} if the deviceDTO is not valid,
+     * or with status {@code 404 (Not Found)} if the deviceDTO is not found,
+     * or with status {@code 500 (Internal Server Error)} if the deviceDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/devices/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<Device> partialUpdateDevice(
+    public ResponseEntity<DeviceDTO> partialUpdateDevice(
         @PathVariable(value = "id", required = false) final String id,
-        @NotNull @RequestBody Device device
+        @NotNull @RequestBody DeviceDTO deviceDTO
     ) throws URISyntaxException {
-        log.debug("REST request to partial update Device partially : {}, {}", id, device);
-        if (device.getId() == null) {
+        log.debug("REST request to partial update Device partially : {}, {}", id, deviceDTO);
+        if (deviceDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, device.getId())) {
+        if (!Objects.equals(id, deviceDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -120,63 +130,51 @@ public class DeviceResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<Device> result = deviceRepository
-            .findById(device.getId())
-            .map(existingDevice -> {
-                if (device.getName() != null) {
-                    existingDevice.setName(device.getName());
-                }
-                if (device.getProducer() != null) {
-                    existingDevice.setProducer(device.getProducer());
-                }
-                if (device.getVersion() != null) {
-                    existingDevice.setVersion(device.getVersion());
-                }
-                if (device.getType() != null) {
-                    existingDevice.setType(device.getType());
-                }
+        Optional<DeviceDTO> result = deviceService.partialUpdate(deviceDTO);
 
-                return existingDevice;
-            })
-            .map(deviceRepository::save);
-
-        return ResponseUtil.wrapOrNotFound(result, HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, device.getId()));
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, deviceDTO.getId())
+        );
     }
 
     /**
      * {@code GET  /devices} : get all the devices.
      *
+     * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of devices in body.
      */
     @GetMapping("/devices")
-    public List<Device> getAllDevices() {
-        log.debug("REST request to get all Devices");
-        return deviceRepository.findAll();
+    public ResponseEntity<List<DeviceDTO>> getAllDevices(Pageable pageable) {
+        log.debug("REST request to get a page of Devices");
+        Page<DeviceDTO> page = deviceService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
      * {@code GET  /devices/:id} : get the "id" device.
      *
-     * @param id the id of the device to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the device, or with status {@code 404 (Not Found)}.
+     * @param id the id of the deviceDTO to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the deviceDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/devices/{id}")
-    public ResponseEntity<Device> getDevice(@PathVariable String id) {
+    public ResponseEntity<DeviceDTO> getDevice(@PathVariable String id) {
         log.debug("REST request to get Device : {}", id);
-        Optional<Device> device = deviceRepository.findById(id);
-        return ResponseUtil.wrapOrNotFound(device);
+        Optional<DeviceDTO> deviceDTO = deviceService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(deviceDTO);
     }
 
     /**
      * {@code DELETE  /devices/:id} : delete the "id" device.
      *
-     * @param id the id of the device to delete.
+     * @param id the id of the deviceDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/devices/{id}")
     public ResponseEntity<Void> deleteDevice(@PathVariable String id) {
         log.debug("REST request to delete Device : {}", id);
-        deviceRepository.deleteById(id);
+        deviceService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id)).build();
     }
 }

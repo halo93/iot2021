@@ -10,19 +10,22 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * A Device.
  */
 @Document(collection = "devices")
-public class Device implements Serializable {
+public class Device extends AbstractAuditingEntity {
 
     private static final long serialVersionUID = 1L;
 
     @Id
     private String id;
 
+    @NotNull
     @Field("name")
     private String name;
 
+    @NotNull
     @Field("producer")
     private String producer;
 
+    @NotNull
     @Field("version")
     private String version;
 
