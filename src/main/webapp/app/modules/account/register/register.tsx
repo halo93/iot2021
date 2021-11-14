@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ValidatedField, ValidatedForm, isEmail } from 'react-jhipster';
-import { Row, Col, Alert, Button } from 'reactstrap';
+import { Row, Col, Button } from 'reactstrap';
 import { toast } from 'react-toastify';
 
 import PasswordStrengthBar from 'app/shared/layout/password/password-strength-bar';
@@ -37,7 +37,7 @@ export const RegisterPage = () => {
       <Row className="justify-content-center">
         <Col md="8">
           <h1 id="register-title" data-cy="registerTitle">
-            Registration
+            Sign Up
           </h1>
         </Col>
       </Row>
@@ -46,8 +46,7 @@ export const RegisterPage = () => {
           <ValidatedForm id="register-form" onSubmit={handleValidSubmit}>
             <ValidatedField
               name="username"
-              label="Username"
-              placeholder={'Your username'}
+              placeholder={'Username'}
               validate={{
                 required: { value: true, message: 'Your username is required.' },
                 pattern: {
@@ -61,8 +60,7 @@ export const RegisterPage = () => {
             />
             <ValidatedField
               name="email"
-              label="Email"
-              placeholder={'Your email'}
+              placeholder={'Email'}
               type="email"
               validate={{
                 required: { value: true, message: 'Your email is required.' },
@@ -74,7 +72,6 @@ export const RegisterPage = () => {
             />
             <ValidatedField
               name="firstPassword"
-              label="New password"
               placeholder={'New password'}
               type="password"
               onChange={updatePassword}
@@ -88,7 +85,6 @@ export const RegisterPage = () => {
             <PasswordStrengthBar password={password} />
             <ValidatedField
               name="secondPassword"
-              label="New password confirmation"
               placeholder="Confirm the new password"
               type="password"
               validate={{
@@ -99,20 +95,16 @@ export const RegisterPage = () => {
               }}
               data-cy="secondPassword"
             />
-            <Button id="register-submit" color="primary" type="submit" data-cy="submit">
-              Register
-            </Button>
+
+            <Row className="justify-content-left">
+              <Col md="3">
+                <Button id="register-submit" color="info" type="submit" data-cy="submit" className="btn-block">
+                  Sign Up
+                </Button>
+              </Col>
+            </Row>
           </ValidatedForm>
           <p>&nbsp;</p>
-          <Alert color="warning">
-            <span>If you want to</span>
-            <a className="alert-link"> sign in</a>
-            <span>
-              , you can try the default accounts:
-              <br />- Administrator (login=&quot;admin&quot; and password=&quot;admin&quot;)
-              <br />- User (login=&quot;user&quot; and password=&quot;user&quot;).
-            </span>
-          </Alert>
         </Col>
       </Row>
     </div>

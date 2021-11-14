@@ -47,14 +47,14 @@ export const App = () => {
             isOpenAPIEnabled={isOpenAPIEnabled}
           />
         </ErrorBoundary>
-        <div className="container-fluid view-container" id="app-view-container">
+        <div className="container-fluid view-container" id="app-view-container" style={{ height: '800px' }}>
           <Card className="jh-card">
             <ErrorBoundary>
               <AppRoutes />
             </ErrorBoundary>
           </Card>
-          <Footer />
         </div>
+        <Footer />
       </div>
     </Router>
   );
