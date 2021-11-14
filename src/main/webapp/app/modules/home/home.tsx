@@ -7,6 +7,8 @@ import { Row, Col, Alert } from 'reactstrap';
 
 import { useAppSelector } from 'app/config/store';
 
+import LineChartComponent from './line-chart';
+
 export const Home = () => {
   const account = useAppSelector(state => state.authentication.account);
 
@@ -21,6 +23,8 @@ export const Home = () => {
         {account && account.login ? (
           <div>
             <Alert color="success">You are logged in as user {account.login}.</Alert>
+            <h2>Line Chart</h2>
+            <LineChartComponent />
           </div>
         ) : (
           <div>
