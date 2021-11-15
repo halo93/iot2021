@@ -12,6 +12,8 @@ import settings from 'app/modules/account/settings/settings.reducer';
 import passwordReset from 'app/modules/account/password-reset/password-reset.reducer';
 // prettier-ignore
 import device from 'app/entities/device/device.reducer';
+// prettier-ignore
+import room from 'app/entities/room/room.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 const rootReducer = {
@@ -25,6 +27,7 @@ const rootReducer = {
   password,
   settings,
   device,
+  room,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar,
 };
