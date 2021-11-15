@@ -9,6 +9,13 @@ entity Device (devices) {
   type Type required,
 }
 
+entity Room (rooms) {
+  name String required maxlength(100),
+  floor Integer required,
+  size Double required,
+  capacity Integer required,
+}
+
 dto * with mapstruct
 paginate * with pagination
 service * with serviceClass

@@ -43,7 +43,7 @@
     "clientThemeVariant": "",
     "enableGradleEnterprise": false,
     "languages": ["en", "fr"],
-    "entities": ["Device"],
-    "lastLiquibaseTimestamp": 1636240222000
+    "entities": ["Device", "Room"],
+    "lastLiquibaseTimestamp": 1637013423000
   }
 }
