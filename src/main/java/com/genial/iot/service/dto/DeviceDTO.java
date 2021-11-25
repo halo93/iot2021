@@ -25,6 +25,8 @@ public class DeviceDTO implements Serializable {
     @NotNull
     private Type type;
 
+    private String roomId;
+
     private String createdBy;
 
     private Instant createdDate;
@@ -105,6 +107,14 @@ public class DeviceDTO implements Serializable {
         this.lastModifiedDate = lastModifiedDate;
     }
 
+    public String getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(String roomId) {
+        this.roomId = roomId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -135,6 +145,7 @@ public class DeviceDTO implements Serializable {
             ", producer='" + getProducer() + "'" +
             ", version='" + getVersion() + "'" +
             ", type='" + getType() + "'" +
+            ", roomId='" + getRoomId() + "'" +
             "}";
     }
 }

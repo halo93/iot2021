@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Col, Row, Table } from 'reactstrap';
-import { Translate, getSortState, JhiPagination, JhiItemCount, TextFormat } from 'react-jhipster';
+import { Button, Col, Row, Table, Tooltip } from 'reactstrap';
+import { getSortState, JhiPagination, JhiItemCount, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCartPlus } from '@fortawesome/free-solid-svg-icons';
 
 import { getEntities } from './room.reducer';
-import { IRoom } from 'app/shared/model/room.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import { ASC, DESC, ITEMS_PER_PAGE, SORT } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
@@ -158,6 +158,19 @@ export const Room = (props: RouteComponentProps<{ url: string }>) => {
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${room.id}`} color="info" size="sm" data-cy="entityDetailsButton">
                         <FontAwesomeIcon icon="eye" /> <span className="d-none d-md-inline">View</span>
+                      </Button>
+                      <Button
+                        tag={Link}
+                        to={`${match.url}/${room.id}/devices`}
+                        color="warning"
+                        size="sm"
+                        data-cy="entityDeviceButton"
+                        data-toggle="tooltip"
+                        title={
+                          room.devices.length <= 0 ? 'No Device in this room. Click here to add' : 'Show devices installed in this room'
+                        }
+                      >
+                        <FontAwesomeIcon icon={faCartPlus} /> <span className="d-none d-md-inline">Devices</span>
                       </Button>
                       <Button
                         tag={Link}

@@ -41,6 +41,17 @@ export const RoomDetail = (props: RouteComponentProps<{ id: string }>) => {
             <span id="capacity">Capacity</span>
           </dt>
           <dd>{roomEntity.capacity}</dd>
+          <dt>Device</dt>
+          <dd>
+            {roomEntity.devices
+              ? roomEntity.devices.map((val, i) => (
+                  <span key={val.id}>
+                    <a>{val.id}</a>
+                    {roomEntity.devices && i === roomEntity.devices.length - 1 ? '' : ', '}
+                  </span>
+                ))
+              : null}
+          </dd>
           <dt>
             <span id="createdBy">Created By</span>
           </dt>

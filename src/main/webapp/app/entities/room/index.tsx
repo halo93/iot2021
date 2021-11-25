@@ -7,6 +7,7 @@ import Room from './room';
 import RoomDetail from './room-detail';
 import RoomUpdate from './room-update';
 import RoomDeleteDialog from './room-delete-dialog';
+import DevicesDialog from 'app/entities/room/devices-dialog';
 
 const Routes = ({ match }) => (
   <>
@@ -17,6 +18,7 @@ const Routes = ({ match }) => (
       <ErrorBoundaryRoute path={match.url} component={Room} />
     </Switch>
     <ErrorBoundaryRoute exact path={`${match.url}/:id/delete`} component={RoomDeleteDialog} />
+    <ErrorBoundaryRoute exact path={`${match.url}/:id/devices`} component={DevicesDialog} />
   </>
 );
 

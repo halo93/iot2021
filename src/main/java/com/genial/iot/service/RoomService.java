@@ -1,32 +1,35 @@
 package com.genial.iot.service;
 
+import com.genial.iot.domain.Device;
 import com.genial.iot.domain.Room;
+import com.genial.iot.repository.DeviceRepository;
 import com.genial.iot.repository.RoomRepository;
 import com.genial.iot.service.dto.RoomDTO;
 import com.genial.iot.service.mapper.RoomMapper;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service Implementation for managing {@link Room}.
  */
 @Service
+@RequiredArgsConstructor
 public class RoomService {
 
     private final Logger log = LoggerFactory.getLogger(RoomService.class);
 
     private final RoomRepository roomRepository;
 
-    private final RoomMapper roomMapper;
+    private final DeviceRepository deviceRepository;
 
-    public RoomService(RoomRepository roomRepository, RoomMapper roomMapper) {
-        this.roomRepository = roomRepository;
-        this.roomMapper = roomMapper;
-    }
+    private final RoomMapper roomMapper;
 
     /**
      * Save a room.
@@ -34,11 +37,41 @@ public class RoomService {
      * @param roomDTO the entity to save.
      * @return the persisted entity.
      */
+    @Transactional
     public RoomDTO save(RoomDTO roomDTO) {
         log.debug("Request to save Room : {}", roomDTO);
         Room room = roomMapper.toEntity(roomDTO);
         room = roomRepository.save(room);
         return roomMapper.toDto(room);
+    }
+
+    public RoomDTO update(RoomDTO roomDTO) {
+        log.debug("Request to save Room : {}", roomDTO);
+        Room existingRoom = roomRepository.findById(roomDTO.getId()).orElseThrow(NoSuchElementException::new);
+        Room room = roomMapper.toEntity(roomDTO);
+        room.setDevices(updateAssociatedDevices(existingRoom, room));
+        room.setCreatedBy(existingRoom.getCreatedBy());
+        room.setCreatedDate(existingRoom.getCreatedDate());
+        room = roomRepository.save(room);
+        return roomMapper.toDto(room);
+    }
+
+    private Set<Device> updateAssociatedDevices(Room existingRoom, Room updatedRoom) {
+        List<Device> existingDevicesInRoom = deviceRepository.findAllByIdIn(
+            existingRoom.getDevices().stream().map(Device::getId).collect(Collectors.toList())
+        );
+        List<Device> devicesToBeUpdatedInRoom = deviceRepository.findAllByIdIn(
+            updatedRoom.getDevices().stream().map(Device::getId).collect(Collectors.toList())
+        );
+        if (devicesToBeUpdatedInRoom.isEmpty()) {
+            existingDevicesInRoom.forEach(e -> e.setRoom(null));
+            deviceRepository.saveAll(existingDevicesInRoom);
+        } else {
+            existingDevicesInRoom.forEach(e -> e.setRoom(null));
+            devicesToBeUpdatedInRoom.forEach(e -> e.setRoom(updatedRoom));
+        }
+        deviceRepository.saveAll(existingDevicesInRoom);
+        return new HashSet<>(deviceRepository.saveAll(devicesToBeUpdatedInRoom));
     }
 
     /**
@@ -73,6 +106,15 @@ public class RoomService {
     }
 
     /**
+     * Get all the rooms with eager load of many-to-many relationships.
+     *
+     * @return the list of entities.
+     */
+    public Page<RoomDTO> findAllWithEagerRelationships(Pageable pageable) {
+        return roomRepository.findAllWithEagerRelationships(pageable).map(roomMapper::toDto);
+    }
+
+    /**
      * Get one room by id.
      *
      * @param id the id of the entity.
@@ -80,7 +122,7 @@ public class RoomService {
      */
     public Optional<RoomDTO> findOne(String id) {
         log.debug("Request to get Room : {}", id);
-        return roomRepository.findById(id).map(roomMapper::toDto);
+        return roomRepository.findOneWithEagerRelationships(id).map(roomMapper::toDto);
     }
 
     /**

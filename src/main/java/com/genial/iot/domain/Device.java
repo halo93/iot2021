@@ -1,8 +1,8 @@
 package com.genial.iot.domain;
 
-import java.io.Serializable;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -32,6 +32,10 @@ public class Device extends AbstractAuditingEntity {
     @NotNull
     @Field("type")
     private Type type;
+
+    @DBRef
+    @Field("room")
+    private Room room;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -98,6 +102,14 @@ public class Device extends AbstractAuditingEntity {
 
     public void setType(Type type) {
         this.type = type;
+    }
+
+    public Room getRoom() {
+        return this.room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

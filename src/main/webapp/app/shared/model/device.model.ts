@@ -2,6 +2,7 @@ import { DeviceType } from 'app/shared/model/enumerations/device-type.model';
 
 export interface IDevice {
   id?: string;
+  roomId?: string;
   name?: string;
   producer?: string;
   version?: string;

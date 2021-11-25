@@ -4,6 +4,7 @@ import com.genial.iot.domain.Device;
 import com.genial.iot.repository.DeviceRepository;
 import com.genial.iot.service.dto.DeviceDTO;
 import com.genial.iot.service.mapper.DeviceMapper;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,5 +92,13 @@ public class DeviceService {
     public void delete(String id) {
         log.debug("Request to delete Device : {}", id);
         deviceRepository.deleteById(id);
+    }
+
+    public List<DeviceDTO> getAllDevicesForRoom(String roomId) {
+        return deviceMapper.toDto(deviceRepository.findAllByRoomId(roomId));
+    }
+
+    public Page<DeviceDTO> getAllFreeDevices(Pageable pageable) {
+        return deviceRepository.findAllByRoomIsNull(pageable).map(deviceMapper::toDto);
     }
 }
