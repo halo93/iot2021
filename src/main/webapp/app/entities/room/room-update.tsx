@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Row, Col, FormText } from 'reactstrap';
+import { Button, Row, Col } from 'reactstrap';
 import { isNumber, ValidatedField, ValidatedForm } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+import { getFreeEntities as getFreeDevices } from 'app/entities/device/device.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './room.reducer';
-import { IRoom } from 'app/shared/model/room.model';
-import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
 import { mapIdList } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
@@ -15,6 +14,7 @@ export const RoomUpdate = (props: RouteComponentProps<{ id: string }>) => {
 
   const [isNew] = useState(!props.match.params || !props.match.params.id);
 
+  const devices = useAppSelector(state => state.device.entities);
   const roomEntity = useAppSelector(state => state.room.entity);
   const loading = useAppSelector(state => state.room.loading);
   const updating = useAppSelector(state => state.room.updating);
@@ -29,6 +29,8 @@ export const RoomUpdate = (props: RouteComponentProps<{ id: string }>) => {
     } else {
       dispatch(getEntity(props.match.params.id));
     }
+
+    dispatch(getFreeDevices({}));
   }, []);
 
   useEffect(() => {
@@ -41,6 +43,7 @@ export const RoomUpdate = (props: RouteComponentProps<{ id: string }>) => {
     const entity = {
       ...roomEntity,
       ...values,
+      devices: mapIdList(values.devices),
     };
 
     if (isNew) {
@@ -55,6 +58,7 @@ export const RoomUpdate = (props: RouteComponentProps<{ id: string }>) => {
       ? {}
       : {
           ...roomEntity,
+          devices: roomEntity?.devices?.map(e => e.id.toString()),
         };
 
   return (
@@ -117,6 +121,25 @@ export const RoomUpdate = (props: RouteComponentProps<{ id: string }>) => {
                   validate: v => isNumber(v) || 'This field should be a number.',
                 }}
               />
+              <ValidatedField label="Device" id="room-device" data-cy="device" type="select" multiple name="devices">
+                <option value="" key="0">
+                  Remove all devices
+                </option>
+                {devices
+                  ? devices.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id}>
+                        {`${otherEntity.id} - ${otherEntity.name} - ${otherEntity.producer} - ${otherEntity.version}`}
+                      </option>
+                    ))
+                  : null}
+                {roomEntity.devices && roomEntity.devices.length > 0
+                  ? roomEntity.devices.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id} selected>
+                        {`${otherEntity.id} - ${otherEntity.name} - ${otherEntity.producer} - ${otherEntity.version}`}
+                      </option>
+                    ))
+                  : null}
+              </ValidatedField>
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/room" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

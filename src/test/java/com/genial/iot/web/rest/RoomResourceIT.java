@@ -2,20 +2,28 @@ package com.genial.iot.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.genial.iot.IntegrationTest;
 import com.genial.iot.domain.Room;
 import com.genial.iot.repository.RoomRepository;
+import com.genial.iot.service.RoomService;
 import com.genial.iot.service.dto.RoomDTO;
 import com.genial.iot.service.mapper.RoomMapper;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,6 +32,7 @@ import org.springframework.test.web.servlet.MockMvc;
  * Integration tests for the {@link RoomResource} REST controller.
  */
 @IntegrationTest
+@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class RoomResourceIT {
@@ -46,8 +55,14 @@ class RoomResourceIT {
     @Autowired
     private RoomRepository roomRepository;
 
+    @Mock
+    private RoomRepository roomRepositoryMock;
+
     @Autowired
     private RoomMapper roomMapper;
+
+    @Mock
+    private RoomService roomServiceMock;
 
     @Autowired
     private MockMvc restRoomMockMvc;
@@ -202,6 +217,24 @@ class RoomResourceIT {
             .andExpect(jsonPath("$.[*].floor").value(hasItem(DEFAULT_FLOOR)))
             .andExpect(jsonPath("$.[*].size").value(hasItem(DEFAULT_SIZE.doubleValue())))
             .andExpect(jsonPath("$.[*].capacity").value(hasItem(DEFAULT_CAPACITY)));
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllRoomsWithEagerRelationshipsIsEnabled() throws Exception {
+        when(roomServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restRoomMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
+
+        verify(roomServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllRoomsWithEagerRelationshipsIsNotEnabled() throws Exception {
+        when(roomServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restRoomMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
+
+        verify(roomServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @Test

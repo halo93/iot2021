@@ -2,11 +2,12 @@ package com.genial.iot.service.dto;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
-import javax.validation.constraints.*;
+import java.util.Set;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * A DTO for the {@link com.genial.iot.domain.Room} entity.
@@ -28,6 +29,8 @@ public class RoomDTO implements Serializable {
 
     @NotNull
     private Integer capacity;
+
+    private Set<DeviceDTO> devices = new HashSet<>();
 
     private String createdBy;
 
@@ -67,6 +70,7 @@ public class RoomDTO implements Serializable {
             ", floor=" + getFloor() +
             ", size=" + getSize() +
             ", capacity=" + getCapacity() +
+            ", devices=" + getDevices() +
             "}";
     }
 }

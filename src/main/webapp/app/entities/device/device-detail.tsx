@@ -60,11 +60,11 @@ export const DeviceDetail = (props: RouteComponentProps<{ id: string }>) => {
           <dt>
             <span id="lastModifiedDate">Last Modified Date</span>
           </dt>
-          <td>
+          <dd>
             {deviceEntity.lastModifiedDate ? (
               <TextFormat value={deviceEntity.lastModifiedDate} type="date" format={APP_DATE_FORMAT} blankOnInvalid />
             ) : null}
-          </td>
+          </dd>
         </dl>
         <Button tag={Link} to="/device" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Back</span>

@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Col, Row, Table } from 'reactstrap';
-import { Translate, getSortState, JhiPagination, JhiItemCount, TextFormat } from 'react-jhipster';
+import { Button, Row, Table } from 'reactstrap';
+import { getSortState, JhiPagination, JhiItemCount, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { getEntities } from './device.reducer';
-import { IDevice } from 'app/shared/model/device.model';
-import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
+import { APP_DATE_FORMAT } from 'app/config/constants';
 import { ASC, DESC, ITEMS_PER_PAGE, SORT } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
@@ -101,6 +100,9 @@ export const Device = (props: RouteComponentProps<{ url: string }>) => {
                 <th className="hand" onClick={sort('id')}>
                   ID <FontAwesomeIcon icon="sort" />
                 </th>
+                <th className="hand" onClick={sort('roomId')}>
+                  Room ID <FontAwesomeIcon icon="sort" />
+                </th>
                 <th className="hand" onClick={sort('name')}>
                   Name <FontAwesomeIcon icon="sort" />
                 </th>
@@ -139,6 +141,15 @@ export const Device = (props: RouteComponentProps<{ url: string }>) => {
                     <Button tag={Link} to={`${match.url}/${device.id}`} color="link" size="sm">
                       {device.id}
                     </Button>
+                  </td>
+                  <td>
+                    {device.roomId ? (
+                      <Button tag={Link} to={`/room/${device.roomId}`} color="link" size="sm">
+                        {device.roomId}
+                      </Button>
+                    ) : (
+                      'N/A'
+                    )}
                   </td>
                   <td>{device.name}</td>
                   <td>{device.producer}</td>

@@ -24,6 +24,11 @@ export const getEntities = createAsyncThunk('device/fetch_entity_list', async ({
   return axios.get<IDevice[]>(requestUrl);
 });
 
+export const getFreeEntities = createAsyncThunk('device/fetch_free_entity_list', async ({ page, size, sort }: IQueryParams) => {
+  const requestUrl = `api/free-devices${sort ? `?page=${page}&size=${size}&sort=${sort}&` : '?'}cacheBuster=${new Date().getTime()}`;
+  return axios.get<IDevice[]>(requestUrl);
+});
+
 export const getEntity = createAsyncThunk(
   'device/fetch_entity',
   async (id: string | number) => {
@@ -91,6 +96,14 @@ export const DeviceSlice = createEntitySlice({
         state.entity = {};
       })
       .addMatcher(isFulfilled(getEntities), (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          entities: action.payload.data,
+          totalItems: parseInt(action.payload.headers['x-total-count'], 10),
+        };
+      })
+      .addMatcher(isFulfilled(getFreeEntities), (state, action) => {
         return {
           ...state,
           loading: false,

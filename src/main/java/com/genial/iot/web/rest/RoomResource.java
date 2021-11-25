@@ -1,23 +1,26 @@
 package com.genial.iot.web.rest;
 
 import com.genial.iot.repository.RoomRepository;
+import com.genial.iot.service.DeviceService;
 import com.genial.iot.service.RoomService;
+import com.genial.iot.service.dto.DeviceDTO;
 import com.genial.iot.service.dto.RoomDTO;
 import com.genial.iot.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -29,6 +32,7 @@ import tech.jhipster.web.util.ResponseUtil;
  * REST controller for managing {@link com.genial.iot.domain.Room}.
  */
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api")
 public class RoomResource {
 
@@ -41,12 +45,9 @@ public class RoomResource {
 
     private final RoomService roomService;
 
-    private final RoomRepository roomRepository;
+    private final DeviceService deviceService;
 
-    public RoomResource(RoomService roomService, RoomRepository roomRepository) {
-        this.roomService = roomService;
-        this.roomRepository = roomRepository;
-    }
+    private final RoomRepository roomRepository;
 
     /**
      * {@code POST  /rooms} : Create a new room.
@@ -95,7 +96,7 @@ public class RoomResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        RoomDTO result = roomService.save(roomDTO);
+        RoomDTO result = roomService.update(roomDTO);
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, roomDTO.getId()))
@@ -142,12 +143,21 @@ public class RoomResource {
      * {@code GET  /rooms} : get all the rooms.
      *
      * @param pageable the pagination information.
+     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of rooms in body.
      */
     @GetMapping("/rooms")
-    public ResponseEntity<List<RoomDTO>> getAllRooms(Pageable pageable) {
+    public ResponseEntity<List<RoomDTO>> getAllRooms(
+        Pageable pageable,
+        @RequestParam(required = false, defaultValue = "false") boolean eagerload
+    ) {
         log.debug("REST request to get a page of Rooms");
-        Page<RoomDTO> page = roomService.findAll(pageable);
+        Page<RoomDTO> page;
+        if (eagerload) {
+            page = roomService.findAllWithEagerRelationships(pageable);
+        } else {
+            page = roomService.findAll(pageable);
+        }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -176,5 +186,12 @@ public class RoomResource {
         log.debug("REST request to delete Room : {}", id);
         roomService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id)).build();
+    }
+
+    @GetMapping("/rooms/{id}/devices")
+    public ResponseEntity<List<DeviceDTO>> getDevicesForRoom(@PathVariable String id) {
+        log.debug("REST request to get Devices for Room : {}", id);
+        roomService.findOne(id).orElseThrow(NoSuchElementException::new);
+        return ResponseEntity.ok().body(deviceService.getAllDevicesForRoom(id));
     }
 }
