@@ -4,6 +4,8 @@ import React from 'react';
 
 import { Col, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHome, faObjectGroup, faScrewdriver, faUserFriends } from '@fortawesome/free-solid-svg-icons';
 
 const Footer = () => (
   <div className="footer">
@@ -46,21 +48,27 @@ const Footer = () => (
             <div className="col-md-6">
               <p>
                 <a className="scroll-link" href="http://localhost:9000">
-                  Home
+                  <FontAwesomeIcon icon={faHome} /> Home
                 </a>
               </p>
               <p>
-                <a href="#">Product</a>
+                <a href="#">
+                  <FontAwesomeIcon icon={faObjectGroup} /> Our Product
+                </a>
               </p>
             </div>
 
             <div className="col-md-6">
               <p>
-                <a href="#">How it works</a>
+                <a href="#">
+                  <FontAwesomeIcon icon={faScrewdriver} /> How it works
+                </a>
               </p>
 
               <p>
-                <a href="#">Our Clients</a>
+                <a href="#">
+                  <FontAwesomeIcon icon={faUserFriends} /> Our Clients
+                </a>
               </p>
             </div>
           </div>

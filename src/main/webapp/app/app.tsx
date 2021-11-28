@@ -1,5 +1,6 @@
 import 'react-toastify/dist/ReactToastify.css';
 import './app.scss';
+import './custom.scss';
 import 'app/config/dayjs.ts';
 
 import React, { useEffect } from 'react';
@@ -47,7 +48,7 @@ export const App = () => {
             isOpenAPIEnabled={isOpenAPIEnabled}
           />
         </ErrorBoundary>
-        <div className="container-fluid view-container" id="app-view-container" style={{ height: '800px' }}>
+        <div className="container-fluid view-container" id="app-view-container" style={{ height: '700px' }}>
           <Card className="jh-card">
             <ErrorBoundary>
               <AppRoutes />

@@ -1,6 +1,6 @@
 import React from 'react';
 import { ValidatedField } from 'react-jhipster';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, Row, Col, Form } from 'reactstrap';
+import { Alert, Button, Col, Form, Modal, ModalBody, ModalFooter, ModalHeader, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
@@ -25,7 +25,7 @@ const LoginModal = (props: ILoginModalProps) => {
   const { loginError, handleClose } = props;
 
   return (
-    <Modal isOpen={props.showModal} toggle={handleClose} backdrop="static" id="login-page" autoFocus={false}>
+    <Modal isOpen={props.showModal} toggle={handleClose} backdrop="static" id="login-page" autoFocus={false} className="mt-6-5 mb-6-5">
       <Form onSubmit={handleSubmit(login)}>
         <ModalHeader id="login-title" data-cy="loginTitle" toggle={handleClose}>
           Sign in
