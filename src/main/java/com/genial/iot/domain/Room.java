@@ -37,7 +37,7 @@ public class Room extends AbstractAuditingEntity {
     @Field("capacity")
     private Integer capacity;
 
-    @DBRef
+    @DBRef(lazy = true)
     @Field("devices")
     private Set<Device> devices = new HashSet<>();
 
