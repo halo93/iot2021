@@ -102,7 +102,7 @@ public class RoomService {
      */
     public Page<RoomDTO> findAll(Pageable pageable) {
         log.debug("Request to get all Rooms");
-        return roomRepository.findAll(pageable).map(roomMapper::toDto);
+        return roomRepository.findAll(pageable).map(roomMapper::toLazyDto);
     }
 
     /**
