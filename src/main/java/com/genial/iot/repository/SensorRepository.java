@@ -8,5 +8,6 @@ import org.springframework.data.repository.NoRepositoryBean;
 @NoRepositoryBean
 public interface SensorRepository<S extends AbstractSensorEntity> extends MongoRepository<S, String> {
     Optional<S> findTopByRoomIdOrderByCreatedDateDesc(String roomId);
+    Optional<S> findTop5ByRoomIdOrderByCreatedDateDesc(String roomId);
     Optional<S> findTopByRoomIdAndValueBetweenOrderByCreatedDateDesc(String roomId, Double min, Double max);
 }
