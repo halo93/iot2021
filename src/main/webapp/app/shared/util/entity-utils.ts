@@ -34,3 +34,12 @@ export const overridePaginationStateWithQueryParams = (paginationBaseState: IPag
   }
   return paginationBaseState;
 };
+
+export const transformToTwoDimensionalArray = (arr, numberOfElementPerChildItem) => {
+  const copiedArr = [...arr];
+  const rs = [];
+  while (copiedArr.length > 0) {
+    rs.push(copiedArr.splice(0, numberOfElementPerChildItem));
+  }
+  return rs;
+};

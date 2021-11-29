@@ -22,7 +22,7 @@ export const GuestPageComponent = () => {
         <h3>Welcome to our 2021 IoT Project!</h3>
         <Row className="mt-4">
           <Col md="4">
-            <p className="font-weight-bold bg-secondary text-white text-center" style={{ lineHeight: '3' }}>
+            <p className="font-weight-bold text-white text-center" style={{ lineHeight: '3', backgroundColor: '#053742' }}>
               <FontAwesomeIcon icon={faUserFriends} /> About Us
             </p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum rutrum sed nunc eu blandit. Curabitur interdum metus sit
@@ -31,7 +31,7 @@ export const GuestPageComponent = () => {
             vitae ante ultrices, congue orci nec, hendrerit neque. Maecenas sodales pretium eros vel porttitor.
           </Col>
           <Col md="4">
-            <p className="font-weight-bold bg-secondary text-white text-center" style={{ lineHeight: '3' }}>
+            <p className="font-weight-bold text-white text-center" style={{ lineHeight: '3', backgroundColor: '#053742' }}>
               <FontAwesomeIcon icon={faObjectGroup} /> Our Product
             </p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum rutrum sed nunc eu blandit. Curabitur interdum metus sit
@@ -40,7 +40,7 @@ export const GuestPageComponent = () => {
             vitae ante ultrices, congue orci nec, hendrerit neque. Maecenas sodales pretium eros vel porttitor.
           </Col>
           <Col md="4">
-            <p className="font-weight-bold bg-secondary text-white text-center" style={{ lineHeight: '3' }}>
+            <p className="font-weight-bold text-white text-center" style={{ lineHeight: '3', backgroundColor: '#053742' }}>
               <FontAwesomeIcon icon={faScrewdriver} /> How it Works
             </p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum rutrum sed nunc eu blandit. Curabitur interdum metus sit

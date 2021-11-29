@@ -28,7 +28,7 @@ public class ComfortService {
             .findAll(Pageable.unpaged())
             .map(e -> {
                 ComfortDTO comfortDTO = new ComfortDTO();
-                comfortDTO.setRoomDTO(e);
+                comfortDTO.setRoom(e);
                 return comfortDTO;
             })
             .getContent();
@@ -53,7 +53,7 @@ public class ComfortService {
                 ? Constants.EU_SUMMER_TEMP_MAX_STANDARD
                 : Constants.EU_WINTER_TEMP_MAX_STANDARD;
             temperatureRepository
-                .findTopByRoomIdOrderByCreatedDateDesc(comfortDTO.getRoomDTO().getId())
+                .findTopByRoomIdOrderByCreatedDateDesc(comfortDTO.getRoom().getId())
                 .ifPresent(e1 -> {
                     TemperatureDTO temperatureDTO = TemperatureDTO.of(e1);
                     if (e1.getValue() >= minTemp && e1.getValue() <= maxTemp) {
@@ -68,7 +68,7 @@ public class ComfortService {
     private void setNoiseForComfortDTO(Boolean isNoise, ComfortDTO comfortDTO) {
         if (isNoise) {
             noiseRepository
-                .findTopByRoomIdOrderByCreatedDateDesc(comfortDTO.getRoomDTO().getId())
+                .findTopByRoomIdOrderByCreatedDateDesc(comfortDTO.getRoom().getId())
                 .ifPresent(e1 -> {
                     NoiseDTO noiseDTO = NoiseDTO.of(e1);
                     if (e1.getValue() <= Constants.EU_NOISE_AVG_STANDARD) {
@@ -83,7 +83,7 @@ public class ComfortService {
     private void setLightForComfortDTO(Boolean isLight, ComfortDTO comfortDTO) {
         if (isLight) {
             lightRepository
-                .findTopByRoomIdOrderByCreatedDateDesc(comfortDTO.getRoomDTO().getId())
+                .findTopByRoomIdOrderByCreatedDateDesc(comfortDTO.getRoom().getId())
                 .ifPresent(e1 -> {
                     LightDTO lightDTO = LightDTO.of(e1);
                     if (e1.getValue() >= Constants.EU_LIGHT_MIN_STANDARD && e1.getValue() <= Constants.EU_LIGHT_MAX_STANDARD) {
@@ -98,7 +98,7 @@ public class ComfortService {
     private void setHumidityForComfortDTO(Boolean isHumidity, ComfortDTO comfortDTO) {
         if (isHumidity) {
             humidityRepository
-                .findTopByRoomIdOrderByCreatedDateDesc(comfortDTO.getRoomDTO().getId())
+                .findTopByRoomIdOrderByCreatedDateDesc(comfortDTO.getRoom().getId())
                 .ifPresent(e1 -> {
                     HumidityDTO humidityDTO = HumidityDTO.of(e1);
                     if (e1.getValue() >= Constants.EU_HUMIDITY_MIN_STANDARD && e1.getValue() <= Constants.EU_HUMIDITY_MAX_STANDARD) {

@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import FirstTab from './firstTab';
-import SecondTab from '../home/secondTab';
-import { Button, ButtonGroup } from 'reactstrap';
+import FirstTab from './first-tab';
+import SecondTab from './second-tab';
+import { Button } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const TabsComponent = () => {
   const [activeTab, setActiveTab] = useState('tab1');
-  const [clean, setClean] = useState(false);
+  const [clean] = useState(false);
 
   const handleTab1 = () => {
     // update the state to tab1

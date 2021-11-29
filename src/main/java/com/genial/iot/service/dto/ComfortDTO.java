@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Data
 public class ComfortDTO {
 
-    private RoomDTO roomDTO;
+    private RoomDTO room;
     private TemperatureDTO temperature;
     private LightDTO light;
     private HumidityDTO humidity;
