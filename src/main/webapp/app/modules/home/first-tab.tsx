@@ -24,7 +24,10 @@ const FirstTab = (props: ComponentProps<any>) => {
   };
   return (
     <div className="FirstTab">
-      <p style={{ fontStyle: 'italic', textAlign: 'center' }}> Dear customer, please uncheck your least preferred criteria.</p>
+      <p style={{ fontStyle: 'italic', textAlign: 'center' }}>
+        {' '}
+        Dear customer, please note that you can uncheck your least preferred criteria.
+      </p>
       <div className="mt-2">
         <Row>
           <Col md="6">
@@ -47,8 +50,8 @@ const FirstTab = (props: ComponentProps<any>) => {
               <Card>
                 <CardBody>
                   <CardSubtitle style={{ color: 'black' }}>
-                    The EU standard specifies that the minimum and the maximum temperature required in a classroom are ...% and ...%
-                    respectively.
+                    The EU standard specifies that the temperature required in a classroom ranges from 20&#8451; - 24&#8451; in winter and
+                    24&#8451; - 27&#8451; in Summer.
                   </CardSubtitle>
                 </CardBody>
               </Card>
@@ -76,7 +79,7 @@ const FirstTab = (props: ComponentProps<any>) => {
               <Card>
                 <CardBody>
                   <CardSubtitle style={{ color: 'black' }}>
-                    The EU standard specifies that the minimum and the maximum humidity required in a classroom are ...% and ...%
+                    The EU standard specifies that the minimum and the maximum humidity required in a classroom ranges from 30 - 60%.
                     respectively.
                   </CardSubtitle>
                 </CardBody>

@@ -1,10 +1,16 @@
+import { IRoom } from 'app/shared/model/room.model';
+import { ITemperature } from 'app/shared/model/temperature.model';
+import { IHumidity } from 'app/shared/model/humidity.model';
+import { ILight } from 'app/shared/model/light.model';
+import { INoise } from 'app/shared/model/noise.model';
+
 export interface IUserPreference {
-  id?: string;
-  temperature?: string;
-  humidity?: string;
-  light?: string;
-  sound?: string;
-  createdBy?: string;
+  room?: IRoom | null;
+  temperature?: ITemperature | null;
+  humidity?: IHumidity | null;
+  light?: ILight | null;
+  noise?: INoise | null;
+  rank?: string;
   createdDate?: Date | null;
 }
 
