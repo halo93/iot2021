@@ -126,6 +126,17 @@ public class RoomService {
     }
 
     /**
+     * Get one room by id (Lazy).
+     *
+     * @param id the id of the entity.
+     * @return the entity.
+     */
+    public Optional<RoomDTO> findOneLazy(String id) {
+        log.debug("Request to get Room (Lazy): {}", id);
+        return roomRepository.findById(id).map(roomMapper::toLazyDto);
+    }
+
+    /**
      * Delete the room by id.
      *
      * @param id the id of the entity.

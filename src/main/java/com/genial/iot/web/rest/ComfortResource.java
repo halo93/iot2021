@@ -2,19 +2,17 @@ package com.genial.iot.web.rest;
 
 import com.genial.iot.service.ComfortService;
 import com.genial.iot.service.dto.ComfortDTO;
+import com.genial.iot.service.dto.ComfortDetailDTO;
 import com.genial.iot.service.dto.SearchEUComfortDTO;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import tech.jhipster.web.util.PaginationUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,7 +32,15 @@ public class ComfortResource {
         if (Objects.isNull(searchEUComfortDTO)) {
             searchEUComfortDTO = new SearchEUComfortDTO();
         }
+        log.debug("REST request to get a list of Comfort with Search Param : {}", searchEUComfortDTO);
         List<ComfortDTO> results = comfortService.searchComfortsByEUStandards(searchEUComfortDTO);
         return ResponseEntity.ok().body(results);
+    }
+
+    @GetMapping("/comforts/eu-standards/{roomId}")
+    public ResponseEntity<ComfortDetailDTO> searchRoomComfortByEUStandards(@PathVariable String roomId) {
+        log.debug("REST request to get a Comfort with RoomID : {}", roomId);
+        Optional<ComfortDetailDTO> result = comfortService.searchComfortDetailByRoomId(roomId);
+        return ResponseUtil.wrapOrNotFound(result);
     }
 }

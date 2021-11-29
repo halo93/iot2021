@@ -6,6 +6,7 @@ import com.genial.iot.repository.*;
 import com.genial.iot.service.dto.*;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +29,7 @@ public class ComfortService {
             .findAll(Pageable.unpaged())
             .map(e -> {
                 ComfortDTO comfortDTO = new ComfortDTO();
-                comfortDTO.setRoomDTO(e);
+                comfortDTO.setRoom(e);
                 return comfortDTO;
             })
             .getContent();
@@ -53,7 +54,7 @@ public class ComfortService {
                 ? Constants.EU_SUMMER_TEMP_MAX_STANDARD
                 : Constants.EU_WINTER_TEMP_MAX_STANDARD;
             temperatureRepository
-                .findTopByRoomIdOrderByCreatedDateDesc(comfortDTO.getRoomDTO().getId())
+                .findTopByRoomIdOrderByCreatedDateDesc(comfortDTO.getRoom().getId())
                 .ifPresent(e1 -> {
                     TemperatureDTO temperatureDTO = TemperatureDTO.of(e1);
                     if (e1.getValue() >= minTemp && e1.getValue() <= maxTemp) {
@@ -68,7 +69,7 @@ public class ComfortService {
     private void setNoiseForComfortDTO(Boolean isNoise, ComfortDTO comfortDTO) {
         if (isNoise) {
             noiseRepository
-                .findTopByRoomIdOrderByCreatedDateDesc(comfortDTO.getRoomDTO().getId())
+                .findTopByRoomIdOrderByCreatedDateDesc(comfortDTO.getRoom().getId())
                 .ifPresent(e1 -> {
                     NoiseDTO noiseDTO = NoiseDTO.of(e1);
                     if (e1.getValue() <= Constants.EU_NOISE_AVG_STANDARD) {
@@ -83,7 +84,7 @@ public class ComfortService {
     private void setLightForComfortDTO(Boolean isLight, ComfortDTO comfortDTO) {
         if (isLight) {
             lightRepository
-                .findTopByRoomIdOrderByCreatedDateDesc(comfortDTO.getRoomDTO().getId())
+                .findTopByRoomIdOrderByCreatedDateDesc(comfortDTO.getRoom().getId())
                 .ifPresent(e1 -> {
                     LightDTO lightDTO = LightDTO.of(e1);
                     if (e1.getValue() >= Constants.EU_LIGHT_MIN_STANDARD && e1.getValue() <= Constants.EU_LIGHT_MAX_STANDARD) {
@@ -98,7 +99,7 @@ public class ComfortService {
     private void setHumidityForComfortDTO(Boolean isHumidity, ComfortDTO comfortDTO) {
         if (isHumidity) {
             humidityRepository
-                .findTopByRoomIdOrderByCreatedDateDesc(comfortDTO.getRoomDTO().getId())
+                .findTopByRoomIdOrderByCreatedDateDesc(comfortDTO.getRoom().getId())
                 .ifPresent(e1 -> {
                     HumidityDTO humidityDTO = HumidityDTO.of(e1);
                     if (e1.getValue() >= Constants.EU_HUMIDITY_MIN_STANDARD && e1.getValue() <= Constants.EU_HUMIDITY_MAX_STANDARD) {
@@ -108,5 +109,80 @@ public class ComfortService {
                     comfortDTO.setHumidity(humidityDTO);
                 });
         }
+    }
+
+    public Optional<ComfortDetailDTO> searchComfortDetailByRoomId(String roomId) {
+        Optional<RoomDTO> roomOpt = roomService.findOneLazy(roomId);
+        return roomOpt.map(e -> {
+            ComfortDetailDTO comfortDetailDTO = new ComfortDetailDTO();
+            comfortDetailDTO.setRoom(e);
+            comfortDetailDTO.setTemperatures(getTop5RecentRecordedTemperatureData(roomId));
+            comfortDetailDTO.setNoises(getTop5RecentRecordedNoiseData(roomId));
+            comfortDetailDTO.setLights(getTop5RecentRecordedLightData(roomId));
+            comfortDetailDTO.setHumidity(getTop5RecentRecordedHumidityData(roomId));
+            return comfortDetailDTO;
+        });
+    }
+
+    private List<TemperatureDTO> getTop5RecentRecordedTemperatureData(String roomId) {
+        final Double minTemp = DateTimeUtil.isSummerTimeInEurope()
+            ? Constants.EU_SUMMER_TEMP_MIN_STANDARD
+            : Constants.EU_WINTER_TEMP_MIN_STANDARD;
+        final Double maxTemp = DateTimeUtil.isSummerTimeInEurope()
+            ? Constants.EU_SUMMER_TEMP_MAX_STANDARD
+            : Constants.EU_WINTER_TEMP_MAX_STANDARD;
+        return temperatureRepository
+            .findTop5ByRoomIdOrderByCreatedDateDesc(roomId)
+            .map(e1 -> {
+                TemperatureDTO temperatureDTO = TemperatureDTO.of(e1);
+                if (e1.getValue() >= minTemp && e1.getValue() <= maxTemp) {
+                    temperatureDTO.setValid(true);
+                }
+                return temperatureDTO;
+            })
+            .stream()
+            .collect(Collectors.toList());
+    }
+
+    private List<NoiseDTO> getTop5RecentRecordedNoiseData(String roomId) {
+        return noiseRepository
+            .findTop5ByRoomIdOrderByCreatedDateDesc(roomId)
+            .map(e1 -> {
+                NoiseDTO noiseDTO = NoiseDTO.of(e1);
+                if (e1.getValue() <= Constants.EU_NOISE_AVG_STANDARD) {
+                    noiseDTO.setValid(true);
+                }
+                return noiseDTO;
+            })
+            .stream()
+            .collect(Collectors.toList());
+    }
+
+    private List<LightDTO> getTop5RecentRecordedLightData(String roomId) {
+        return lightRepository
+            .findTop5ByRoomIdOrderByCreatedDateDesc(roomId)
+            .map(e1 -> {
+                LightDTO lightDTO = LightDTO.of(e1);
+                if (e1.getValue() >= Constants.EU_LIGHT_MIN_STANDARD && e1.getValue() <= Constants.EU_LIGHT_MAX_STANDARD) {
+                    lightDTO.setValid(true);
+                }
+                return lightDTO;
+            })
+            .stream()
+            .collect(Collectors.toList());
+    }
+
+    private List<HumidityDTO> getTop5RecentRecordedHumidityData(String roomId) {
+        return humidityRepository
+            .findTop5ByRoomIdOrderByCreatedDateDesc(roomId)
+            .map(e1 -> {
+                HumidityDTO humidityDTO = HumidityDTO.of(e1);
+                if (e1.getValue() >= Constants.EU_HUMIDITY_MIN_STANDARD && e1.getValue() <= Constants.EU_HUMIDITY_MAX_STANDARD) {
+                    humidityDTO.setValid(true);
+                }
+                return humidityDTO;
+            })
+            .stream()
+            .collect(Collectors.toList());
     }
 }
