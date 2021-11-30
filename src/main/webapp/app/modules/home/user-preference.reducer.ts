@@ -4,6 +4,8 @@ import { createAsyncThunk, isFulfilled, isPending, isRejected } from '@reduxjs/t
 import { createEntitySlice, EntityState } from 'app/shared/reducers/reducer.utils';
 import { IUserPreference, defaultValue } from 'app/shared/model/user-preference.model';
 
+export type IUserPreferenceQueryParams = { temperature?: boolean; humidity?: boolean; light?: boolean; noise?: boolean };
+
 const initialState: EntityState<IUserPreference> = {
   loading: false,
   errorMessage: null,
@@ -18,10 +20,15 @@ const apiUrl = 'api/comforts';
 
 // Actions
 
-export const getEntities = createAsyncThunk('user-preference/fetch_entity_list', async () => {
-  const requestUrl = `${apiUrl}/eu-standards?cacheBuster=${new Date().getTime()}`;
-  return axios.get<IUserPreference[]>(requestUrl);
-});
+export const getEntities = createAsyncThunk(
+  'user-preference/fetch_entity_list',
+  async ({ temperature, humidity, light, noise }: IUserPreferenceQueryParams) => {
+    const requestUrl = `${apiUrl}/eu-standards?cacheBuster=${new Date().getTime()}
+    ${temperature ? `&temperature=true` : `&temperature=false`}${humidity ? `&humidity=true` : `&humidity=false`}
+    ${noise ? `&noise=true` : `&noise=false`}${light ? `&light=true` : `&light=false`}`;
+    return axios.get<IUserPreference[]>(requestUrl);
+  }
+);
 
 // slice
 

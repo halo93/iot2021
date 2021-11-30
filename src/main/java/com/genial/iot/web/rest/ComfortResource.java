@@ -26,9 +26,7 @@ public class ComfortResource {
     private final ComfortService comfortService;
 
     @GetMapping("/comforts/eu-standards")
-    public ResponseEntity<List<ComfortDTO>> searchRoomsComfortByEUStandards(
-        @RequestBody(required = false) SearchEUComfortDTO searchEUComfortDTO
-    ) {
+    public ResponseEntity<List<ComfortDTO>> searchRoomsComfortByEUStandards(SearchEUComfortDTO searchEUComfortDTO) {
         if (Objects.isNull(searchEUComfortDTO)) {
             searchEUComfortDTO = new SearchEUComfortDTO();
         }
