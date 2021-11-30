@@ -2,26 +2,26 @@ import React from 'react';
 import { Col, Row } from 'reactstrap';
 
 const SecondTab = () => {
-  const [checkedOneB, setCheckedOne] = React.useState(false);
-  const [checkedTwoB, setCheckedTwo] = React.useState(false);
-  const [checkedThreeB, setCheckedThree] = React.useState(false);
-  const [checkedFourB, setCheckedFour] = React.useState(false);
-  const [checkedFiveB, setCheckedFive] = React.useState(false);
+  const [checkedOneB, setCheckedOneB] = React.useState(false);
+  const [checkedTwoB, setCheckedTwoB] = React.useState(false);
+  const [checkedThreeB, setCheckedThreeB] = React.useState(false);
+  const [checkedFourB, setCheckedFourB] = React.useState(false);
+  const [checkedFiveB, setCheckedFiveB] = React.useState(false);
 
-  const handleChangeOne = () => {
-    setCheckedOne(!checkedOneB);
+  const handleChangeOneB = () => {
+    setCheckedOneB(!checkedOneB);
   };
-  const handleChangeTwo = () => {
-    setCheckedTwo(!checkedTwoB);
+  const handleChangeTwoB = () => {
+    setCheckedTwoB(!checkedTwoB);
   };
-  const handleChangeThree = () => {
-    setCheckedThree(!checkedThreeB);
+  const handleChangeThreeB = () => {
+    setCheckedThreeB(!checkedThreeB);
   };
-  const handleChangeFour = () => {
-    setCheckedFour(!checkedFourB);
+  const handleChangeFourB = () => {
+    setCheckedFourB(!checkedFourB);
   };
-  const handleChangeFive = () => {
-    setCheckedFive(!checkedFiveB);
+  const handleChangeFiveB = () => {
+    setCheckedFiveB(!checkedFiveB);
   };
 
   return (
@@ -35,7 +35,7 @@ const SecondTab = () => {
               className="custom-control-input"
               id="customSwitchesCheckedTemperature2"
               checked={checkedOneB}
-              onChange={handleChangeOne}
+              onChange={handleChangeOneB}
               defaultChecked
             />
             <label className="custom-control-label" htmlFor="customSwitchesCheckedTemperature2">
@@ -66,7 +66,7 @@ const SecondTab = () => {
               id="customSwitchesCheckedHumidity2"
               type="checkbox"
               checked={checkedTwoB}
-              onChange={handleChangeTwo}
+              onChange={handleChangeTwoB}
             />
             <label className="custom-control-label" htmlFor="customSwitchesCheckedHumidity2">
               <span className="mr-2"> Humidity </span>
@@ -96,7 +96,7 @@ const SecondTab = () => {
               id="customSwitchesCheckedLight2"
               type="checkbox"
               checked={checkedThreeB}
-              onChange={handleChangeThree}
+              onChange={handleChangeThreeB}
             />
             <label className="custom-control-label" htmlFor="customSwitchesCheckedLight2">
               <span className="mr-2"> Light </span>
@@ -126,7 +126,7 @@ const SecondTab = () => {
               className="custom-control-input"
               id="customSwitchesCheckedNoise2"
               checked={checkedFourB}
-              onChange={handleChangeFour}
+              onChange={handleChangeFourB}
             />
             <label className="custom-control-label" htmlFor="customSwitchesCheckedNoise2">
               <span className="mr-2"> Noise </span>
@@ -150,7 +150,7 @@ const SecondTab = () => {
               className="custom-control-input"
               id="customSwitchesCheckedRoom_Capacity2"
               checked={checkedFiveB}
-              onChange={handleChangeFive}
+              onChange={handleChangeFiveB}
             />
             <label className="custom-control-label" htmlFor="customSwitchesCheckedRoom_Capacity2">
               <span className="mr-2"> Room Capacity </span>
