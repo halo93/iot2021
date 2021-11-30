@@ -1,26 +1,46 @@
-import React, { ComponentProps, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Card, CardBody, CardSubtitle, CardTitle, Col, Collapse, Input, Row } from 'reactstrap';
-import { UncontrolledCollapse } from 'reactstrap/lib';
-import { RouteComponentProps } from 'react-router-dom';
-import { getUser } from 'app/modules/administration/user-management/user-management.reducer';
 
-const FirstTab = (props: ComponentProps<any>) => {
+const FirstTab = ({
+  clean,
+  copiedTemperature,
+  setCopiedTemperature,
+  copiedLight,
+  setCopiedLight,
+  copiedNoise,
+  setCopiedNoise,
+  copiedHumidity,
+  setCopiedHumidity,
+}) => {
   const [checkedOneA, setCheckedOneA] = React.useState(true);
   const [checkedTwoA, setCheckedTwoA] = React.useState(true);
   const [checkedThreeA, setCheckedThreeA] = React.useState(true);
   const [checkedFourA, setCheckedFourA] = React.useState(true);
 
+  useEffect(() => {
+    if (clean) {
+      setCheckedOneA(true);
+      setCheckedTwoA(true);
+      setCheckedThreeA(true);
+      setCheckedFourA(true);
+    }
+  });
+
   const handleChangeOne = () => {
     setCheckedOneA(!checkedOneA);
+    setCopiedTemperature(!copiedTemperature);
   };
   const handleChangeTwo = () => {
     setCheckedTwoA(!checkedTwoA);
+    setCopiedHumidity(!copiedHumidity);
   };
   const handleChangeThree = () => {
     setCheckedThreeA(!checkedThreeA);
+    setCopiedLight(!copiedLight);
   };
   const handleChangeFour = () => {
     setCheckedFourA(!checkedFourA);
+    setCopiedNoise(!copiedNoise);
   };
   return (
     <div className="FirstTab">
