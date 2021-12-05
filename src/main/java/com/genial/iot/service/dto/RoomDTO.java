@@ -30,6 +30,11 @@ public class RoomDTO implements Serializable {
     @NotNull
     private Integer capacity;
 
+    @Size(max = 512000, message = "This field's size has to be less or equal than 500KB")
+    private byte[] images;
+
+    private String imagesContentType;
+
     private Set<DeviceDTO> devices = new HashSet<>();
 
     private String createdBy;

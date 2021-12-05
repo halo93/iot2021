@@ -37,6 +37,12 @@ public class Room extends AbstractAuditingEntity {
     @Field("capacity")
     private Integer capacity;
 
+    @Field("images")
+    private byte[] images;
+
+    @Field("images_content_type")
+    private String imagesContentType;
+
     @DBRef(lazy = true)
     @Field("devices")
     private Set<Device> devices = new HashSet<>();
@@ -108,6 +114,32 @@ public class Room extends AbstractAuditingEntity {
         this.capacity = capacity;
     }
 
+    public byte[] getImages() {
+        return this.images;
+    }
+
+    public Room images(byte[] images) {
+        this.setImages(images);
+        return this;
+    }
+
+    public void setImages(byte[] images) {
+        this.images = images;
+    }
+
+    public String getImagesContentType() {
+        return this.imagesContentType;
+    }
+
+    public Room imagesContentType(String imagesContentType) {
+        this.imagesContentType = imagesContentType;
+        return this;
+    }
+
+    public void setImagesContentType(String imagesContentType) {
+        this.imagesContentType = imagesContentType;
+    }
+
     public Set<Device> getDevices() {
         return this.devices;
     }
@@ -159,6 +191,7 @@ public class Room extends AbstractAuditingEntity {
             ", floor=" + getFloor() +
             ", size=" + getSize() +
             ", capacity=" + getCapacity() +
+            ", imagesContentType='" + getImagesContentType() + "'" +
             "}";
     }
 }
