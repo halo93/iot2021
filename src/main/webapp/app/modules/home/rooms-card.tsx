@@ -21,7 +21,14 @@ const RoomsCardComponent = props => {
   return (
     <Col md="3" className="text-left">
       <Card>
-        <CardImg variant="top" src="../../content/images/IMG_7995.jpg" />
+        <CardImg
+          variant="top"
+          src={
+            comfort.room.images
+              ? `data:${comfort.room.imagesContentType};base64,${comfort.room.images}`
+              : '../../content/images/unavailable-image.jpg'
+          }
+        />
         <CardBody>
           <CardTitle>
             <h5> {comfort.room.name}</h5>
