@@ -76,6 +76,7 @@ export const DeviceUpdate = (props: RouteComponentProps<{ id: string }>) => {
           ) : (
             <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
               {!isNew ? <ValidatedField name="id" required readOnly id="device-id" label="ID" validate={{ required: true }} /> : null}
+              {!isNew ? <ValidatedField name="roomId" required readOnly id="room-id" label="Room ID" /> : null}
               <ValidatedField
                 label="Name"
                 id="device-name"
