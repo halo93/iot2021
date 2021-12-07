@@ -21,16 +21,22 @@
       "fieldName": "capacity",
       "fieldType": "Integer",
       "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "images",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "image",
+      "fieldValidateRules": ["required", "maxbytes"],
+      "fieldValidateRulesMaxbytes": "512000"
     }
   ],
   "relationships": [
     {
-      "relationshipName": "device",
-      "otherEntityName": "device",
       "relationshipType": "many-to-many",
-      "otherEntityField": "id",
-      "ownerSide": true,
-      "otherEntityRelationshipName": "room"
+      "otherEntityName": "device",
+      "otherEntityRelationshipName": "room",
+      "relationshipName": "device",
+      "ownerSide": true
     }
   ],
   "entityTableName": "rooms",

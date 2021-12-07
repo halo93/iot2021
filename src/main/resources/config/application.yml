@@ -104,6 +104,9 @@ spring:
   output:
     ansi:
       console-available: true
+  servlet:
+    multipart:
+      max-request-size: 5MB
 
 server:
   servlet:

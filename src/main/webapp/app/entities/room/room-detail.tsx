@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
-import { TextFormat } from 'react-jhipster';
+import { openFile, byteSize, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { getEntity } from './room.reducer';
@@ -41,6 +41,20 @@ export const RoomDetail = (props: RouteComponentProps<{ id: string }>) => {
             <span id="capacity">Capacity</span>
           </dt>
           <dd>{roomEntity.capacity}</dd>
+          <dt>
+            <span id="images">Images</span>
+          </dt>
+          <dd>
+            {roomEntity.images ? (
+              <div>
+                {roomEntity.imagesContentType ? (
+                  <a onClick={openFile(roomEntity.imagesContentType, roomEntity.images)}>
+                    <img src={`data:${roomEntity.imagesContentType};base64,${roomEntity.images}`} style={{ maxHeight: '100px' }} />
+                  </a>
+                ) : null}
+              </div>
+            ) : null}
+          </dd>
           <dt>Device</dt>
           <dd>
             {roomEntity.devices
