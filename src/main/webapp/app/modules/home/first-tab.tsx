@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Card, CardBody, CardSubtitle, CardTitle, Col, Collapse, Input, Row } from 'reactstrap';
+import { Card, CardBody, CardSubtitle, Col, Collapse, Input, Row } from 'reactstrap';
 
 const FirstTab = ({
   clean,
@@ -45,7 +45,6 @@ const FirstTab = ({
   return (
     <div className="FirstTab">
       <p style={{ fontStyle: 'italic', textAlign: 'center' }}>
-        {' '}
         Dear customer, please note that you can uncheck your least preferred criteria.
       </p>
       <div className="mt-2">

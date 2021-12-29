@@ -48,7 +48,11 @@ export const App = () => {
             isOpenAPIEnabled={isOpenAPIEnabled}
           />
         </ErrorBoundary>
-        <div className="container-fluid view-container" id="app-view-container" style={{ height: '700px' }}>
+        <div
+          className="container-fluid view-container"
+          id="app-view-container"
+          style={{ backgroundImage: 'url(/content/images/futuristic-smart-city-with-5g-global-network-technology.jpg)', height: '700px' }}
+        >
           <Card className="jh-card">
             <ErrorBoundary>
               <AppRoutes />

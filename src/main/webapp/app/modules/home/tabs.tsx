@@ -34,7 +34,7 @@ const TabsComponent = ({ temperature, setTemperature, light, setLight, noise, se
     <div className="Tabs">
       <ul className="nav">
         <li className={activeTab === 'tab1' ? 'active' : ''} onClick={handleTab1}>
-          Room comfort with EU standards
+          Room comfort based on EU standards
         </li>
         <li className={activeTab === 'tab2' ? 'active' : ''} onClick={handleTab2}>
           Room comfort based on your preference
@@ -54,7 +54,7 @@ const TabsComponent = ({ temperature, setTemperature, light, setLight, noise, se
             setCopiedHumidity={setCopiedHumidity}
           />
         ) : (
-          <SecondTab />
+          <SecondTab clean={clean} />
         )}
       </div>
 
