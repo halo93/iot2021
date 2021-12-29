@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Badge, Card, CardBody, CardImg, CardSubtitle, CardText, CardTitle, Col, ListGroup, ListGroupItem, Row } from 'reactstrap';
-import { faThermometerFull, faLightbulb, faWater, faAudioDescription, faFileAudio } from '@fortawesome/free-solid-svg-icons';
+import { Badge, Card, CardBody, CardImg, CardSubtitle, CardText, CardTitle, Col, ListGroup, ListGroupItem } from 'reactstrap';
+import { faThermometerFull, faLightbulb, faWater, faFileAudio } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const RoomsCardComponent = props => {
@@ -33,7 +33,9 @@ const RoomsCardComponent = props => {
           <CardTitle>
             <h5> {comfort.room.name}</h5>
           </CardTitle>
-          <CardSubtitle className="ribbon-card text-center">{comfort.rank || 'N/A'}</CardSubtitle>
+          <CardSubtitle className="ribbon-wrapper text-center">
+            <div className="ribbon-card">{comfort.rank || 'N/A'}</div>
+          </CardSubtitle>
           <CardText>
             <ListGroup>
               <ListGroupItem

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Card, CardBody, CardSubtitle, CardTitle, Col, Collapse, Input, Row } from 'reactstrap';
+import { Card, CardBody, CardSubtitle, Col, Collapse, Input, Row } from 'reactstrap';
 
 const FirstTab = ({
   clean,
@@ -24,28 +24,27 @@ const FirstTab = ({
       setCheckedThreeA(true);
       setCheckedFourA(true);
     }
-  });
+  }, []);
 
-  const handleChangeOne = () => {
+  const handleChangeOneA = () => {
     setCheckedOneA(!checkedOneA);
     setCopiedTemperature(!copiedTemperature);
   };
-  const handleChangeTwo = () => {
+  const handleChangeTwoA = () => {
     setCheckedTwoA(!checkedTwoA);
     setCopiedHumidity(!copiedHumidity);
   };
-  const handleChangeThree = () => {
+  const handleChangeThreeA = () => {
     setCheckedThreeA(!checkedThreeA);
     setCopiedLight(!copiedLight);
   };
-  const handleChangeFour = () => {
+  const handleChangeFourA = () => {
     setCheckedFourA(!checkedFourA);
     setCopiedNoise(!copiedNoise);
   };
   return (
     <div className="FirstTab">
       <p style={{ fontStyle: 'italic', textAlign: 'center' }}>
-        {' '}
         Dear customer, please note that you can uncheck your least preferred criteria.
       </p>
       <div className="mt-2">
@@ -59,7 +58,7 @@ const FirstTab = ({
                   className="custom-control-input"
                   id="customSwitchesCheckedTemperature1"
                   checked={checkedOneA}
-                  onChange={handleChangeOne}
+                  onChange={handleChangeOneA}
                 />
                 <label className="custom-control-label" htmlFor="customSwitchesCheckedTemperature1">
                   <span className="mr-2"> Temperature </span>
@@ -87,7 +86,7 @@ const FirstTab = ({
                   id="customSwitchesCheckedHumidity1"
                   type="checkbox"
                   checked={checkedTwoA}
-                  onChange={handleChangeTwo}
+                  onChange={handleChangeTwoA}
                 />
                 <label className="custom-control-label" htmlFor="customSwitchesCheckedHumidity1">
                   <span className="mr-2"> Humidity </span>
@@ -120,7 +119,7 @@ const FirstTab = ({
                   id="customSwitchesCheckedLight1"
                   type="checkbox"
                   checked={checkedThreeA}
-                  onChange={handleChangeThree}
+                  onChange={handleChangeThreeA}
                 />
                 <label className="custom-control-label" htmlFor="customSwitchesCheckedLight1">
                   <span className="mr-2"> Light </span>
@@ -147,7 +146,7 @@ const FirstTab = ({
                   className="custom-control-input"
                   id="customSwitchesCheckedNoise1"
                   checked={checkedFourA}
-                  onChange={handleChangeFour}
+                  onChange={handleChangeFourA}
                 />
                 <label className="custom-control-label" htmlFor="customSwitchesCheckedNoise1">
                   <span className="mr-2"> Noise </span>

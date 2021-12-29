@@ -63,8 +63,8 @@ ul.nav li.active {
 }
 
 .outlet {
-  padding-left: 70px;
-  padding-right: 70px;
+  padding-left: 90px;
+  padding-right: 90px;
   justify-content: center;
   align-items: center;
 }
@@ -73,32 +73,27 @@ ul.nav li.active {
   font-size: 1rem;
 }
 
-.ribbon-card {
-  background-color: rgba(25, 189, 175, 0.5);
-  left: -0.5em;
-  -moz-transform: rotate(-45deg);
-  -ms-transform: rotate(-45deg);
-  -o-transform: rotate(-45deg);
-  -webkit-transform: rotate(-45deg);
-  transform: rotate(-45deg);
+.ribbon-wrapper {
+  width: 107px;
+  height: 88px;
   overflow: hidden;
   position: absolute;
-  color: gold;
-  top: 30px;
-  white-space: nowrap;
-  width: 5.5em;
-  z-index: 99999;
-  pointer-events: none;
-  opacity: 1;
-  a {
-    color: #fff;
-    display: block;
-    font-weight: 400;
-    margin: 1px 0;
-    padding: 10px 50px;
+  top: 4.6px;
+  left: -1px;
+  .ribbon-card {
+    font: bold 15px sans-serif;
+    color: #333;
     text-align: center;
-    text-decoration: none;
-    text-shadow: 0 0 5px #444;
-    pointer-events: none;
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    position: relative;
+    padding: 7px 0;
+    top: 15px;
+    left: -30px;
+    width: 120px;
+    background-color: #ebb134;
+    color: #fff;
   }
 }
