@@ -6,6 +6,7 @@ import { Button, Card, CardBody, CardText, CardTitle, Col, Container, Row } from
 
 import TabsComponent from './tabs';
 import RoomsCardComponent from 'app/modules/home/rooms-card';
+import ComfortPageComponent from 'app/modules/rooms-comfort/comfort';
 
 export interface IRequestFormProps {
   showModal: boolean;

@@ -2,6 +2,7 @@ import React from 'react';
 import { Badge, Card, CardBody, CardSubtitle, CardText, CardTitle, Col, ListGroup, ListGroupItem, Row } from 'reactstrap';
 import { faThermometerFull, faLightbulb, faWater, faAudioDescription, faFileAudio } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Link } from 'react-router-dom';
 
 const RoomsCardComponent = () => {
   return (
@@ -10,7 +11,9 @@ const RoomsCardComponent = () => {
         <Col md="3" className="text-left">
           <Card>
             <CardBody>
-              <CardTitle>Room Name:</CardTitle>
+              <CardTitle>
+                <Link to="/comfort">Room Name:</Link>
+              </CardTitle>
               <CardSubtitle>Ranking:</CardSubtitle>
               <CardText>
                 <ListGroup>
