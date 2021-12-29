@@ -1,0 +1,58 @@
+.recharts-wrapper {
+  margin: 0 auto;
+}
+.center {
+  margin: auto;
+  width: 1500px;
+  height: 680px;
+  border: 3px solid #a9a9a9;
+  padding: 10px;
+  justify-content: space-evenly;
+}
+
+.element {
+  margin-bottom: 40px;
+}
+
+.manasik {
+  margin-top: 30px;
+}
+hr.new4 {
+  border: 1px solid #d3d3d3;
+}
+.humidity {
+  height: 10px;
+  width: 10px;
+  background-color: #0095ff;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.temperature {
+  height: 10px;
+  width: 10px;
+  background-color: #008000;
+  border-radius: 50%;
+  display: inline-block;
+}
+.light {
+  height: 10px;
+  width: 10px;
+  background-color: #daa520;
+  border-radius: 50%;
+  display: inline-block;
+}
+.noise {
+  height: 10px;
+  width: 10px;
+  background-color: #ff0000;
+  border-radius: 50%;
+  display: inline-block;
+}
+.capacity {
+  height: 10px;
+  width: 10px;
+  background-color: #808080;
+  border-radius: 50%;
+  display: inline-block;
+}
