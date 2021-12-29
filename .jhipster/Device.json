@@ -23,7 +23,15 @@
       "fieldValidateRules": ["required"]
     }
   ],
-  "relationships": [],
+  "relationships": [
+    {
+      "relationshipType": "many-to-many",
+      "otherEntityName": "room",
+      "otherEntityRelationshipName": "device",
+      "relationshipName": "room",
+      "ownerSide": false
+    }
+  ],
   "entityTableName": "devices",
   "dto": "mapstruct",
   "pagination": "pagination",

@@ -13,7 +13,7 @@
   height: auto;
   min-height: 400px;
   background: #053742;
-  margin: 3.5rem auto 1.5rem;
+  margin: 1.5rem auto 1.5rem;
   padding: 2rem 1rem;
   color: #e8f0f2;
   border-radius: 2rem;
@@ -63,12 +63,37 @@ ul.nav li.active {
 }
 
 .outlet {
-  padding-left: 70px;
-  padding-right: 70px;
+  padding-left: 90px;
+  padding-right: 90px;
   justify-content: center;
   align-items: center;
 }
 
 .min-max {
   font-size: 1rem;
+}
+
+.ribbon-wrapper {
+  width: 107px;
+  height: 88px;
+  overflow: hidden;
+  position: absolute;
+  top: 4.6px;
+  left: -1px;
+  .ribbon-card {
+    font: bold 15px sans-serif;
+    color: #333;
+    text-align: center;
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    position: relative;
+    padding: 7px 0;
+    top: 15px;
+    left: -30px;
+    width: 120px;
+    background-color: #ebb134;
+    color: #fff;
+  }
 }

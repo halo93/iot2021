@@ -1,3 +1,7 @@
+enum Type {
+  SENSOR,PROCESSOR,OTHERS
+}
+
 entity Device (devices) {
   name String required,
   producer String required,
@@ -10,6 +14,11 @@ entity Room (rooms) {
   floor Integer required,
   size Double required,
   capacity Integer required,
+  images ImageBlob required maxbytes(512000),
+}
+
+relationship ManyToMany {
+  Room{device} to Device{room}
 }
 
 dto * with mapstruct

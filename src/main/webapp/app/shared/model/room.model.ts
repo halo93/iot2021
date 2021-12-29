@@ -6,6 +6,8 @@ export interface IRoom {
   floor?: number;
   size?: number;
   capacity?: number;
+  imagesContentType?: string;
+  images?: string;
   devices?: IDevice[] | null;
   createdBy?: string;
   createdDate?: Date | null;

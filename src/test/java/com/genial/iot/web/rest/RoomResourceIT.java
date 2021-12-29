@@ -27,6 +27,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.Base64Utils;
 
 /**
  * Integration tests for the {@link RoomResource} REST controller.
@@ -48,6 +49,11 @@ class RoomResourceIT {
 
     private static final Integer DEFAULT_CAPACITY = 1;
     private static final Integer UPDATED_CAPACITY = 2;
+
+    private static final byte[] DEFAULT_IMAGES = TestUtil.createByteArray(1, "0");
+    private static final byte[] UPDATED_IMAGES = TestUtil.createByteArray(1, "1");
+    private static final String DEFAULT_IMAGES_CONTENT_TYPE = "image/jpg";
+    private static final String UPDATED_IMAGES_CONTENT_TYPE = "image/png";
 
     private static final String ENTITY_API_URL = "/api/rooms";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -76,7 +82,13 @@ class RoomResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Room createEntity() {
-        Room room = new Room().name(DEFAULT_NAME).floor(DEFAULT_FLOOR).size(DEFAULT_SIZE).capacity(DEFAULT_CAPACITY);
+        Room room = new Room()
+            .name(DEFAULT_NAME)
+            .floor(DEFAULT_FLOOR)
+            .size(DEFAULT_SIZE)
+            .capacity(DEFAULT_CAPACITY)
+            .images(DEFAULT_IMAGES)
+            .imagesContentType(DEFAULT_IMAGES_CONTENT_TYPE);
         return room;
     }
 
@@ -87,7 +99,13 @@ class RoomResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Room createUpdatedEntity() {
-        Room room = new Room().name(UPDATED_NAME).floor(UPDATED_FLOOR).size(UPDATED_SIZE).capacity(UPDATED_CAPACITY);
+        Room room = new Room()
+            .name(UPDATED_NAME)
+            .floor(UPDATED_FLOOR)
+            .size(UPDATED_SIZE)
+            .capacity(UPDATED_CAPACITY)
+            .images(UPDATED_IMAGES)
+            .imagesContentType(UPDATED_IMAGES_CONTENT_TYPE);
         return room;
     }
 
@@ -114,6 +132,8 @@ class RoomResourceIT {
         assertThat(testRoom.getFloor()).isEqualTo(DEFAULT_FLOOR);
         assertThat(testRoom.getSize()).isEqualTo(DEFAULT_SIZE);
         assertThat(testRoom.getCapacity()).isEqualTo(DEFAULT_CAPACITY);
+        assertThat(testRoom.getImages()).isEqualTo(DEFAULT_IMAGES);
+        assertThat(testRoom.getImagesContentType()).isEqualTo(DEFAULT_IMAGES_CONTENT_TYPE);
     }
 
     @Test
@@ -216,7 +236,9 @@ class RoomResourceIT {
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].floor").value(hasItem(DEFAULT_FLOOR)))
             .andExpect(jsonPath("$.[*].size").value(hasItem(DEFAULT_SIZE.doubleValue())))
-            .andExpect(jsonPath("$.[*].capacity").value(hasItem(DEFAULT_CAPACITY)));
+            .andExpect(jsonPath("$.[*].capacity").value(hasItem(DEFAULT_CAPACITY)))
+            .andExpect(jsonPath("$.[*].imagesContentType").value(hasItem(DEFAULT_IMAGES_CONTENT_TYPE)))
+            .andExpect(jsonPath("$.[*].images").value(hasItem(Base64Utils.encodeToString(DEFAULT_IMAGES))));
     }
 
     @SuppressWarnings({ "unchecked" })
@@ -251,7 +273,9 @@ class RoomResourceIT {
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.floor").value(DEFAULT_FLOOR))
             .andExpect(jsonPath("$.size").value(DEFAULT_SIZE.doubleValue()))
-            .andExpect(jsonPath("$.capacity").value(DEFAULT_CAPACITY));
+            .andExpect(jsonPath("$.capacity").value(DEFAULT_CAPACITY))
+            .andExpect(jsonPath("$.imagesContentType").value(DEFAULT_IMAGES_CONTENT_TYPE))
+            .andExpect(jsonPath("$.images").value(Base64Utils.encodeToString(DEFAULT_IMAGES)));
     }
 
     @Test
@@ -269,7 +293,13 @@ class RoomResourceIT {
 
         // Update the room
         Room updatedRoom = roomRepository.findById(room.getId()).get();
-        updatedRoom.name(UPDATED_NAME).floor(UPDATED_FLOOR).size(UPDATED_SIZE).capacity(UPDATED_CAPACITY);
+        updatedRoom
+            .name(UPDATED_NAME)
+            .floor(UPDATED_FLOOR)
+            .size(UPDATED_SIZE)
+            .capacity(UPDATED_CAPACITY)
+            .images(UPDATED_IMAGES)
+            .imagesContentType(UPDATED_IMAGES_CONTENT_TYPE);
         RoomDTO roomDTO = roomMapper.toDto(updatedRoom);
 
         restRoomMockMvc
@@ -288,6 +318,8 @@ class RoomResourceIT {
         assertThat(testRoom.getFloor()).isEqualTo(UPDATED_FLOOR);
         assertThat(testRoom.getSize()).isEqualTo(UPDATED_SIZE);
         assertThat(testRoom.getCapacity()).isEqualTo(UPDATED_CAPACITY);
+        assertThat(testRoom.getImages()).isEqualTo(UPDATED_IMAGES);
+        assertThat(testRoom.getImagesContentType()).isEqualTo(UPDATED_IMAGES_CONTENT_TYPE);
     }
 
     @Test
@@ -381,6 +413,8 @@ class RoomResourceIT {
         assertThat(testRoom.getFloor()).isEqualTo(UPDATED_FLOOR);
         assertThat(testRoom.getSize()).isEqualTo(UPDATED_SIZE);
         assertThat(testRoom.getCapacity()).isEqualTo(UPDATED_CAPACITY);
+        assertThat(testRoom.getImages()).isEqualTo(DEFAULT_IMAGES);
+        assertThat(testRoom.getImagesContentType()).isEqualTo(DEFAULT_IMAGES_CONTENT_TYPE);
     }
 
     @Test
@@ -394,7 +428,13 @@ class RoomResourceIT {
         Room partialUpdatedRoom = new Room();
         partialUpdatedRoom.setId(room.getId());
 
-        partialUpdatedRoom.name(UPDATED_NAME).floor(UPDATED_FLOOR).size(UPDATED_SIZE).capacity(UPDATED_CAPACITY);
+        partialUpdatedRoom
+            .name(UPDATED_NAME)
+            .floor(UPDATED_FLOOR)
+            .size(UPDATED_SIZE)
+            .capacity(UPDATED_CAPACITY)
+            .images(UPDATED_IMAGES)
+            .imagesContentType(UPDATED_IMAGES_CONTENT_TYPE);
 
         restRoomMockMvc
             .perform(
@@ -412,6 +452,8 @@ class RoomResourceIT {
         assertThat(testRoom.getFloor()).isEqualTo(UPDATED_FLOOR);
         assertThat(testRoom.getSize()).isEqualTo(UPDATED_SIZE);
         assertThat(testRoom.getCapacity()).isEqualTo(UPDATED_CAPACITY);
+        assertThat(testRoom.getImages()).isEqualTo(UPDATED_IMAGES);
+        assertThat(testRoom.getImagesContentType()).isEqualTo(UPDATED_IMAGES_CONTENT_TYPE);
     }
 
     @Test

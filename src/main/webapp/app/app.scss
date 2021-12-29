@@ -4,6 +4,7 @@
 body {
   background: #fafafa;
   margin: 0;
+  overflow: auto;
 }
 
 a {
@@ -111,6 +112,16 @@ Generic styles
 .error {
   color: white;
   background-color: red;
+}
+
+.success {
+  color: white;
+  background-color: #07bc0c;
+}
+
+.secondary {
+  color: white;
+  background-color: #bbbbbbff;
 }
 
 .break {

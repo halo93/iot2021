@@ -1,218 +1,86 @@
-import React from 'react';
-import { Badge, Card, CardBody, CardSubtitle, CardText, CardTitle, Col, ListGroup, ListGroupItem, Row } from 'reactstrap';
-import { faThermometerFull, faLightbulb, faWater, faAudioDescription, faFileAudio } from '@fortawesome/free-solid-svg-icons';
+import React, { useEffect, useState } from 'react';
+import { Badge, Card, CardBody, CardImg, CardSubtitle, CardText, CardTitle, Col, ListGroup, ListGroupItem } from 'reactstrap';
+import { faThermometerFull, faLightbulb, faWater, faFileAudio } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 
-const RoomsCardComponent = () => {
-  return (
-    <div>
-      <Row className="mt-3">
-        <Col md="3" className="text-left">
-          <Card>
-            <CardBody>
-              <CardTitle>
-                <Link to="/comfort">Room Name:</Link>
-              </CardTitle>
-              <CardSubtitle>Ranking:</CardSubtitle>
-              <CardText>
-                <ListGroup>
-                  <ListGroupItem className="justify-content-between">
-                    <FontAwesomeIcon icon={faThermometerFull} />
-                    <span>&nbsp;</span>
-                    Temperature <Badge pill>12&#8451;</Badge>
-                  </ListGroupItem>
-                  <ListGroupItem className="justify-content-between">
-                    <FontAwesomeIcon icon={faWater} />
-                    <i className="far fa-humidity"></i>
-                    <span>&nbsp;</span>
-                    Humidity <Badge pill>80%</Badge>
-                  </ListGroupItem>
-                  <ListGroupItem className="justify-content-between">
-                    <FontAwesomeIcon icon={faLightbulb} />
-                    <span>&nbsp;</span>
-                    Light <Badge pill>250lux</Badge>
-                  </ListGroupItem>
-                  <ListGroupItem className="justify-content-between">
-                    <FontAwesomeIcon icon={faFileAudio} />
-                    <span>&nbsp;</span>
-                    Noise <Badge pill>45dB</Badge>
-                  </ListGroupItem>
-                </ListGroup>
-              </CardText>
-            </CardBody>
-          </Card>
-        </Col>
-        <Col md="3" className="text-left">
-          <Card>
-            <CardBody>
-              <CardTitle>Room Name:</CardTitle>
-              <CardSubtitle>Ranking:</CardSubtitle>
-              <CardText>
-                <ListGroup>
-                  <ListGroupItem className="justify-content-between">
-                    <FontAwesomeIcon icon={faThermometerFull} />
-                    <span>&nbsp;</span>
-                    Temperature <Badge pill>12&#8451;</Badge>
-                  </ListGroupItem>
-                  <ListGroupItem className="justify-content-between">
-                    <FontAwesomeIcon icon={faWater} />
-                    <i className="far fa-humidity"></i>
-                    <span>&nbsp;</span>
-                    Humidity <Badge pill>80%</Badge>
-                  </ListGroupItem>
-                  <ListGroupItem className="justify-content-between">
-                    <FontAwesomeIcon icon={faLightbulb} />
-                    <span>&nbsp;</span>
-                    Light <Badge pill>250lux</Badge>
-                  </ListGroupItem>
-                  <ListGroupItem className="justify-content-between">
-                    <FontAwesomeIcon icon={faFileAudio} />
-                    <span>&nbsp;</span>
-                    Noise <Badge pill>45dB</Badge>
-                  </ListGroupItem>
-                </ListGroup>
-              </CardText>
-            </CardBody>
-          </Card>
-        </Col>
-        <Col md="3" className="text-left">
-          <Card>
-            <CardBody>
-              <CardTitle>Room Name:</CardTitle>
-              <CardSubtitle>Ranking:</CardSubtitle>
-              <CardText>
-                <ListGroup>
-                  <ListGroupItem className="justify-content-between">
-                    <FontAwesomeIcon icon={faThermometerFull} />
-                    <span>&nbsp;</span>
-                    Temperature <Badge pill>12&#8451;</Badge>
-                  </ListGroupItem>
-                  <ListGroupItem className="justify-content-between">
-                    <FontAwesomeIcon icon={faWater} />
-                    <i className="far fa-humidity"></i>
-                    <span>&nbsp;</span>
-                    Humidity <Badge pill>80%</Badge>
-                  </ListGroupItem>
-                  <ListGroupItem className="justify-content-between">
-                    <FontAwesomeIcon icon={faLightbulb} />
-                    <span>&nbsp;</span>
-                    Light <Badge pill>250lux</Badge>
-                  </ListGroupItem>
-                  <ListGroupItem className="justify-content-between">
-                    <FontAwesomeIcon icon={faFileAudio} />
-                    <span>&nbsp;</span>
-                    Noise <Badge pill>45dB</Badge>
-                  </ListGroupItem>
-                </ListGroup>
-              </CardText>
-            </CardBody>
-          </Card>
-        </Col>
-        <Col md="3" className="text-left">
-          <Card>
-            <CardBody>
-              <CardTitle>Room Name:</CardTitle>
-              <CardSubtitle>Ranking:</CardSubtitle>
-              <CardText>
-                <ListGroup>
-                  <ListGroupItem className="justify-content-between">
-                    <FontAwesomeIcon icon={faThermometerFull} />
-                    <span>&nbsp;</span>
-                    Temperature <Badge pill>12&#8451;</Badge>
-                  </ListGroupItem>
-                  <ListGroupItem className="justify-content-between">
-                    <FontAwesomeIcon icon={faWater} />
-                    <i className="far fa-humidity"></i>
-                    <span>&nbsp;</span>
-                    Humidity <Badge pill>80%</Badge>
-                  </ListGroupItem>
-                  <ListGroupItem className="justify-content-between">
-                    <FontAwesomeIcon icon={faLightbulb} />
-                    <span>&nbsp;</span>
-                    Light <Badge pill>250lux</Badge>
-                  </ListGroupItem>
-                  <ListGroupItem className="justify-content-between">
-                    <FontAwesomeIcon icon={faFileAudio} />
-                    <span>&nbsp;</span>
-                    Noise <Badge pill>45dB</Badge>
-                  </ListGroupItem>
-                </ListGroup>
-              </CardText>
-            </CardBody>
-          </Card>
-        </Col>
-      </Row>
+const RoomsCardComponent = props => {
+  const [comfort, setComfort] = useState(props.comfort);
+  const [temperature, setTemperature] = useState(props.temperature);
+  const [humidity, setHumidity] = useState(props.humidity);
+  const [light, setLight] = useState(props.light);
+  const [noise, setNoise] = useState(props.noise);
 
-      <Row className="mt-3">
-        <Col md="3" className="text-left">
-          <Card>
-            <CardBody>
-              <CardTitle>Room Name:</CardTitle>
-              <CardSubtitle>Ranking:</CardSubtitle>
-              <CardText>
-                <ListGroup>
-                  <ListGroupItem className="justify-content-between">
-                    <FontAwesomeIcon icon={faThermometerFull} />
-                    <span>&nbsp;</span>
-                    Temperature <Badge pill>12&#8451;</Badge>
-                  </ListGroupItem>
-                  <ListGroupItem className="justify-content-between">
-                    <FontAwesomeIcon icon={faWater} />
-                    <i className="far fa-humidity"></i>
-                    <span>&nbsp;</span>
-                    Humidity <Badge pill>80%</Badge>
-                  </ListGroupItem>
-                  <ListGroupItem className="justify-content-between">
-                    <FontAwesomeIcon icon={faLightbulb} />
-                    <span>&nbsp;</span>
-                    Light <Badge pill>250lux</Badge>
-                  </ListGroupItem>
-                  <ListGroupItem className="justify-content-between">
-                    <FontAwesomeIcon icon={faFileAudio} />
-                    <span>&nbsp;</span>
-                    Noise <Badge pill>45dB</Badge>
-                  </ListGroupItem>
-                </ListGroup>
-              </CardText>
-            </CardBody>
-          </Card>
-        </Col>
-        <Col md="3" className="text-left">
-          <Card>
-            <CardBody>
-              <CardTitle>Room Name:</CardTitle>
-              <CardSubtitle>Ranking:</CardSubtitle>
-              <CardText>
-                <ListGroup>
-                  <ListGroupItem className="justify-content-between">
-                    <FontAwesomeIcon icon={faThermometerFull} />
-                    <span>&nbsp;</span>
-                    Temperature <Badge pill>12&#8451;</Badge>
-                  </ListGroupItem>
-                  <ListGroupItem className="justify-content-between">
-                    <FontAwesomeIcon icon={faWater} />
-                    <i className="far fa-humidity"></i>
-                    <span>&nbsp;</span>
-                    Humidity <Badge pill>80%</Badge>
-                  </ListGroupItem>
-                  <ListGroupItem className="justify-content-between">
-                    <FontAwesomeIcon icon={faLightbulb} />
-                    <span>&nbsp;</span>
-                    Light <Badge pill>250lux</Badge>
-                  </ListGroupItem>
-                  <ListGroupItem className="justify-content-between">
-                    <FontAwesomeIcon icon={faFileAudio} />
-                    <span>&nbsp;</span>
-                    Noise <Badge pill>45dB</Badge>
-                  </ListGroupItem>
-                </ListGroup>
-              </CardText>
-            </CardBody>
-          </Card>
-        </Col>
-      </Row>
-    </div>
+  useEffect(() => {
+    setComfort(props.comfort);
+    setTemperature(props.temperature);
+    setHumidity(props.humidity);
+    setLight(props.light);
+    setNoise(props.noise);
+  }, [props.comfort, props.temperature, props.humidity, props.light, props.noise]);
+
+  return (
+    <Col md="3" className="text-left">
+      <Card>
+        <CardImg
+          variant="top"
+          src={
+            comfort.room.images
+              ? `data:${comfort.room.imagesContentType};base64,${comfort.room.images}`
+              : '../../content/images/unavailable-image.jpg'
+          }
+        />
+        <CardBody>
+          <CardTitle>
+            <h5>
+              <Link to="/comfort">{comfort.room.name}</Link>
+            </h5>
+          </CardTitle>
+          <CardSubtitle className="ribbon-wrapper text-center">
+            <div className="ribbon-card">{comfort.rank || 'N/A'}</div>
+          </CardSubtitle>
+          <CardText>
+            <ListGroup>
+              <ListGroupItem
+                className={`justify-content-between ${temperature && comfort.temperature.valid ? ' ' : 'error'} ${
+                  !temperature ? 'secondary' : ''
+                }`}
+              >
+                <FontAwesomeIcon icon={faThermometerFull} />
+                <span>&nbsp;</span>
+                Temperature&nbsp;
+                <Badge pill>{comfort.temperature.value}&#8451;</Badge> {!temperature && <Badge pill>Disabled</Badge>}
+              </ListGroupItem>
+
+              <ListGroupItem
+                className={`justify-content-between ${humidity && comfort.humidity.valid ? ' ' : 'error'} ${!humidity ? 'secondary' : ''}`}
+              >
+                <FontAwesomeIcon icon={faWater} />
+                <i className="far fa-humidity" />
+                <span>&nbsp;</span>
+                Humidity <Badge pill>{comfort.humidity.value}%</Badge> {!humidity && <Badge pill>Disabled</Badge>}
+              </ListGroupItem>
+
+              <ListGroupItem
+                className={`justify-content-between ${light && comfort.light.valid ? ' ' : 'error'} ${!light ? 'secondary' : ''}`}
+              >
+                <FontAwesomeIcon icon={faLightbulb} />
+                <span>&nbsp;</span>
+                Light <Badge pill>{comfort.light.value} Lux</Badge> {!light && <Badge pill>Disabled</Badge>}
+              </ListGroupItem>
+
+              <ListGroupItem
+                className={`justify-content-between ${noise && comfort.noise.valid ? ' ' : 'error'} ${!noise ? 'secondary' : ''}`}
+              >
+                <FontAwesomeIcon icon={faFileAudio} />
+                <span>&nbsp;</span>
+                Noise <Badge pill>{comfort.noise.value} dB</Badge> {!noise && <Badge pill>Disabled</Badge>}
+              </ListGroupItem>
+            </ListGroup>
+          </CardText>
+        </CardBody>
+      </Card>
+    </Col>
   );
 };
 

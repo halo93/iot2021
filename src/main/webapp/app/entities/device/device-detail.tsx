@@ -30,6 +30,10 @@ export const DeviceDetail = (props: RouteComponentProps<{ id: string }>) => {
           </dt>
           <dd>{deviceEntity.name}</dd>
           <dt>
+            <span id="roomId">Room ID</span>
+          </dt>
+          <dd>{deviceEntity.roomId ? deviceEntity.roomId : 'N/A'}</dd>
+          <dt>
             <span id="producer">Producer</span>
           </dt>
           <dd>{deviceEntity.producer}</dd>

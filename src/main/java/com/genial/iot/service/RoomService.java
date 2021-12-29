@@ -102,7 +102,7 @@ public class RoomService {
      */
     public Page<RoomDTO> findAll(Pageable pageable) {
         log.debug("Request to get all Rooms");
-        return roomRepository.findAll(pageable).map(roomMapper::toDto);
+        return roomRepository.findAll(pageable).map(roomMapper::toLazyDto);
     }
 
     /**
@@ -123,6 +123,17 @@ public class RoomService {
     public Optional<RoomDTO> findOne(String id) {
         log.debug("Request to get Room : {}", id);
         return roomRepository.findOneWithEagerRelationships(id).map(roomMapper::toDto);
+    }
+
+    /**
+     * Get one room by id (Lazy).
+     *
+     * @param id the id of the entity.
+     * @return the entity.
+     */
+    public Optional<RoomDTO> findOneLazy(String id) {
+        log.debug("Request to get Room (Lazy): {}", id);
+        return roomRepository.findById(id).map(roomMapper::toLazyDto);
     }
 
     /**

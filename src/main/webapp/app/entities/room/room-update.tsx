@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Row, Col } from 'reactstrap';
-import { isNumber, ValidatedField, ValidatedForm } from 'react-jhipster';
+import { Button, Row, Col, FormText } from 'reactstrap';
+import { isNumber, ValidatedField, ValidatedForm, ValidatedBlobField } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { getFreeEntities as getFreeDevices } from 'app/entities/device/device.reducer';
@@ -119,6 +119,17 @@ export const RoomUpdate = (props: RouteComponentProps<{ id: string }>) => {
                 validate={{
                   required: { value: true, message: 'This field is required.' },
                   validate: v => isNumber(v) || 'This field should be a number.',
+                }}
+              />
+              <ValidatedBlobField
+                label="Images"
+                id="room-images"
+                name="images"
+                data-cy="images"
+                isImage
+                accept="image/*"
+                validate={{
+                  required: { value: true, message: 'This field is required.' },
                 }}
               />
               <ValidatedField label="Device" id="room-device" data-cy="device" type="select" multiple name="devices">

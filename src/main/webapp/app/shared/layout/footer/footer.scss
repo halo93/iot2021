@@ -4,12 +4,13 @@
   left: 0;
   bottom: 0;
   right: 0;
-  background: #57616b;
+  background: #053742;
   color: #aaa;
+  z-index: 99999;
 }
 
 .footer a {
-  color: #79a05f;
+  color: #aaa;
 }
 
 .footer-header {
@@ -21,7 +22,7 @@
 }
 
 .footer-bottom {
-  background-color: #3f474e;
+  background-color: #03232a;
 }
 
 .footer-copyright p {

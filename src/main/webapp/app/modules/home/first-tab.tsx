@@ -1,30 +1,52 @@
-import React, { ComponentProps, useEffect } from 'react';
-import { Card, CardBody, CardSubtitle, CardTitle, Col, Collapse, Input, Row } from 'reactstrap';
-import { UncontrolledCollapse } from 'reactstrap/lib';
-import { RouteComponentProps } from 'react-router-dom';
-import { getUser } from 'app/modules/administration/user-management/user-management.reducer';
+import React, { useEffect } from 'react';
+import { Card, CardBody, CardSubtitle, Col, Collapse, Input, Row } from 'reactstrap';
 
-const FirstTab = (props: ComponentProps<any>) => {
+const FirstTab = ({
+  clean,
+  copiedTemperature,
+  setCopiedTemperature,
+  copiedLight,
+  setCopiedLight,
+  copiedNoise,
+  setCopiedNoise,
+  copiedHumidity,
+  setCopiedHumidity,
+}) => {
   const [checkedOneA, setCheckedOneA] = React.useState(true);
   const [checkedTwoA, setCheckedTwoA] = React.useState(true);
   const [checkedThreeA, setCheckedThreeA] = React.useState(true);
   const [checkedFourA, setCheckedFourA] = React.useState(true);
 
-  const handleChangeOne = () => {
+  useEffect(() => {
+    if (clean) {
+      setCheckedOneA(true);
+      setCheckedTwoA(true);
+      setCheckedThreeA(true);
+      setCheckedFourA(true);
+    }
+  }, []);
+
+  const handleChangeOneA = () => {
     setCheckedOneA(!checkedOneA);
+    setCopiedTemperature(!copiedTemperature);
   };
-  const handleChangeTwo = () => {
+  const handleChangeTwoA = () => {
     setCheckedTwoA(!checkedTwoA);
+    setCopiedHumidity(!copiedHumidity);
   };
-  const handleChangeThree = () => {
+  const handleChangeThreeA = () => {
     setCheckedThreeA(!checkedThreeA);
+    setCopiedLight(!copiedLight);
   };
-  const handleChangeFour = () => {
+  const handleChangeFourA = () => {
     setCheckedFourA(!checkedFourA);
+    setCopiedNoise(!copiedNoise);
   };
   return (
     <div className="FirstTab">
-      <p style={{ fontStyle: 'italic', textAlign: 'center' }}> Dear customer, please uncheck your least preferred criteria.</p>
+      <p style={{ fontStyle: 'italic', textAlign: 'center' }}>
+        Dear customer, please note that you can uncheck your least preferred criteria.
+      </p>
       <div className="mt-2">
         <Row>
           <Col md="6">
@@ -36,7 +58,7 @@ const FirstTab = (props: ComponentProps<any>) => {
                   className="custom-control-input"
                   id="customSwitchesCheckedTemperature1"
                   checked={checkedOneA}
-                  onChange={handleChangeOne}
+                  onChange={handleChangeOneA}
                 />
                 <label className="custom-control-label" htmlFor="customSwitchesCheckedTemperature1">
                   <span className="mr-2"> Temperature </span>
@@ -47,8 +69,8 @@ const FirstTab = (props: ComponentProps<any>) => {
               <Card>
                 <CardBody>
                   <CardSubtitle style={{ color: 'black' }}>
-                    The EU standard specifies that the minimum and the maximum temperature required in a classroom are ...% and ...%
-                    respectively.
+                    The EU standard specifies that the temperature required in a classroom ranges from 20&#8451; - 24&#8451; in winter and
+                    24&#8451; - 27&#8451; in Summer.
                   </CardSubtitle>
                 </CardBody>
               </Card>
@@ -64,7 +86,7 @@ const FirstTab = (props: ComponentProps<any>) => {
                   id="customSwitchesCheckedHumidity1"
                   type="checkbox"
                   checked={checkedTwoA}
-                  onChange={handleChangeTwo}
+                  onChange={handleChangeTwoA}
                 />
                 <label className="custom-control-label" htmlFor="customSwitchesCheckedHumidity1">
                   <span className="mr-2"> Humidity </span>
@@ -76,7 +98,7 @@ const FirstTab = (props: ComponentProps<any>) => {
               <Card>
                 <CardBody>
                   <CardSubtitle style={{ color: 'black' }}>
-                    The EU standard specifies that the minimum and the maximum humidity required in a classroom are ...% and ...%
+                    The EU standard specifies that the minimum and the maximum humidity required in a classroom ranges from 30 - 60%.
                     respectively.
                   </CardSubtitle>
                 </CardBody>
@@ -97,7 +119,7 @@ const FirstTab = (props: ComponentProps<any>) => {
                   id="customSwitchesCheckedLight1"
                   type="checkbox"
                   checked={checkedThreeA}
-                  onChange={handleChangeThree}
+                  onChange={handleChangeThreeA}
                 />
                 <label className="custom-control-label" htmlFor="customSwitchesCheckedLight1">
                   <span className="mr-2"> Light </span>
@@ -124,7 +146,7 @@ const FirstTab = (props: ComponentProps<any>) => {
                   className="custom-control-input"
                   id="customSwitchesCheckedNoise1"
                   checked={checkedFourA}
-                  onChange={handleChangeFour}
+                  onChange={handleChangeFourA}
                 />
                 <label className="custom-control-label" htmlFor="customSwitchesCheckedNoise1">
                   <span className="mr-2"> Noise </span>

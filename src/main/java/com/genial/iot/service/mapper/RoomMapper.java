@@ -12,6 +12,10 @@ public interface RoomMapper extends EntityMapper<RoomDTO, Room> {
     @Mapping(target = "devices", source = "devices", qualifiedByName = "idSet")
     RoomDTO toDto(Room s);
 
+    @Named(value = "lazyDto")
+    @Mapping(target = "devices", ignore = true)
+    RoomDTO toLazyDto(Room s);
+
     @Mapping(target = "removeDevice", ignore = true)
     @Mapping(target = "createdDate", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
