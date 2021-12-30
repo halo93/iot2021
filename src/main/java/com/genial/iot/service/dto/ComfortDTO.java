@@ -13,7 +13,7 @@ public class ComfortDTO {
     private NoiseDTO noise;
     private Rank rank;
 
-    private Integer totalPoint = 0;
+    private double totalPoint = 0;
 
     @RequiredArgsConstructor
     public enum Rank {

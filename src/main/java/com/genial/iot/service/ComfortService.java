@@ -46,6 +46,27 @@ public class ComfortService {
             .collect(Collectors.toList());
     }
 
+    public List<ComfortDTO> searchComfortsByUserPreference(SearchUserPreferenceComfortDTO searchUserPreferenceComfortDTO) {
+        List<ComfortDTO> comfortDTOs = roomService
+            .findAll(Pageable.unpaged())
+            .map(e -> {
+                ComfortDTO comfortDTO = new ComfortDTO();
+                comfortDTO.setRoom(e);
+                return comfortDTO;
+            })
+            .getContent();
+        return comfortDTOs
+            .stream()
+            .peek(e -> {
+                setHumidityForComfortDTO(searchUserPreferenceComfortDTO.getHumidityPriority(), e);
+                setLightForComfortDTO(searchUserPreferenceComfortDTO.getLightPriority(), e);
+                setNoiseForComfortDTO(searchUserPreferenceComfortDTO.getNoisePriority(), e);
+                setTemperatureForComfortDTO(searchUserPreferenceComfortDTO.getTemperaturePriority(), e);
+            })
+            .sorted(Comparator.comparing(ComfortDTO::getTotalPoint).reversed())
+            .collect(Collectors.toList());
+    }
+
     private void setTemperatureForComfortDTO(Boolean isTemperature, ComfortDTO comfortDTO) {
         final Double minTemp = DateTimeUtil.isSummerTimeInEurope()
             ? Constants.EU_SUMMER_TEMP_MIN_STANDARD
@@ -69,6 +90,25 @@ public class ComfortService {
             });
     }
 
+    private void setTemperatureForComfortDTO(double temperaturePriority, ComfortDTO comfortDTO) {
+        final Double minTemp = DateTimeUtil.isSummerTimeInEurope()
+            ? Constants.EU_SUMMER_TEMP_MIN_STANDARD
+            : Constants.EU_WINTER_TEMP_MIN_STANDARD;
+        final Double maxTemp = DateTimeUtil.isSummerTimeInEurope()
+            ? Constants.EU_SUMMER_TEMP_MAX_STANDARD
+            : Constants.EU_WINTER_TEMP_MAX_STANDARD;
+        temperatureRepository
+            .findTopByRoomIdOrderByCreatedDateDesc(comfortDTO.getRoom().getId())
+            .ifPresent(e1 -> {
+                TemperatureDTO temperatureDTO = TemperatureDTO.of(e1);
+                if (e1.getValue() >= minTemp && e1.getValue() <= maxTemp) {
+                    temperatureDTO.setValid(true);
+                    comfortDTO.setTotalPoint(comfortDTO.getTotalPoint() + temperaturePriority * 100);
+                }
+                comfortDTO.setTemperature(temperatureDTO);
+            });
+    }
+
     private void setNoiseForComfortDTO(Boolean isNoise, ComfortDTO comfortDTO) {
         noiseRepository
             .findTopByRoomIdOrderByCreatedDateDesc(comfortDTO.getRoom().getId())
@@ -81,6 +121,19 @@ public class ComfortService {
                     }
                 } else {
                     comfortDTO.setTotalPoint(comfortDTO.getTotalPoint() + 1);
+                }
+                comfortDTO.setNoise(noiseDTO);
+            });
+    }
+
+    private void setNoiseForComfortDTO(double noisePriority, ComfortDTO comfortDTO) {
+        noiseRepository
+            .findTopByRoomIdOrderByCreatedDateDesc(comfortDTO.getRoom().getId())
+            .ifPresent(e1 -> {
+                NoiseDTO noiseDTO = NoiseDTO.of(e1);
+                if (e1.getValue() <= Constants.EU_NOISE_AVG_STANDARD) {
+                    noiseDTO.setValid(true);
+                    comfortDTO.setTotalPoint(comfortDTO.getTotalPoint() + noisePriority * 100);
                 }
                 comfortDTO.setNoise(noiseDTO);
             });
@@ -103,6 +156,19 @@ public class ComfortService {
             });
     }
 
+    private void setLightForComfortDTO(double lightPriority, ComfortDTO comfortDTO) {
+        lightRepository
+            .findTopByRoomIdOrderByCreatedDateDesc(comfortDTO.getRoom().getId())
+            .ifPresent(e1 -> {
+                LightDTO lightDTO = LightDTO.of(e1);
+                if (e1.getValue() >= Constants.EU_LIGHT_MIN_STANDARD && e1.getValue() <= Constants.EU_LIGHT_MAX_STANDARD) {
+                    lightDTO.setValid(true);
+                    comfortDTO.setTotalPoint(comfortDTO.getTotalPoint() + lightPriority * 100);
+                }
+                comfortDTO.setLight(lightDTO);
+            });
+    }
+
     private void setHumidityForComfortDTO(Boolean isHumidity, ComfortDTO comfortDTO) {
         humidityRepository
             .findTopByRoomIdOrderByCreatedDateDesc(comfortDTO.getRoom().getId())
@@ -115,6 +181,19 @@ public class ComfortService {
                     }
                 } else {
                     comfortDTO.setTotalPoint(comfortDTO.getTotalPoint() + 1);
+                }
+                comfortDTO.setHumidity(humidityDTO);
+            });
+    }
+
+    private void setHumidityForComfortDTO(double humidityPriority, ComfortDTO comfortDTO) {
+        humidityRepository
+            .findTopByRoomIdOrderByCreatedDateDesc(comfortDTO.getRoom().getId())
+            .ifPresent(e1 -> {
+                HumidityDTO humidityDTO = HumidityDTO.of(e1);
+                if (e1.getValue() >= Constants.EU_HUMIDITY_MIN_STANDARD && e1.getValue() <= Constants.EU_HUMIDITY_MAX_STANDARD) {
+                    humidityDTO.setValid(true);
+                    comfortDTO.setTotalPoint(comfortDTO.getTotalPoint() + humidityPriority * 100);
                 }
                 comfortDTO.setHumidity(humidityDTO);
             });
