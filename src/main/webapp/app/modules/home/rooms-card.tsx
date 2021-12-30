@@ -33,7 +33,7 @@ const RoomsCardComponent = props => {
         <CardBody>
           <CardTitle>
             <h5>
-              <Link to="/comfort">{comfort.room.name}</Link>
+              <Link to={`/comfort/${comfort.room.id}`}>{comfort.room.name}</Link>
             </h5>
           </CardTitle>
           <CardSubtitle className="ribbon-wrapper text-center">

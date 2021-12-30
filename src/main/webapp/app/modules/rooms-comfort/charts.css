@@ -56,3 +56,7 @@ hr.new4 {
   border-radius: 50%;
   display: inline-block;
 }
+.photo {
+  height: 50%;
+  width: 50%;
+}

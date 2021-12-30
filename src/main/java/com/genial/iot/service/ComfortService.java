@@ -2,8 +2,10 @@ package com.genial.iot.service;
 
 import com.genial.iot.config.Constants;
 import com.genial.iot.config.DateTimeUtil;
-import com.genial.iot.domain.Temperature;
-import com.genial.iot.repository.*;
+import com.genial.iot.repository.HumidityRepository;
+import com.genial.iot.repository.LightRepository;
+import com.genial.iot.repository.NoiseRepository;
+import com.genial.iot.repository.TemperatureRepository;
 import com.genial.iot.service.dto.*;
 import java.util.Comparator;
 import java.util.List;
@@ -221,6 +223,7 @@ public class ComfortService {
             : Constants.EU_WINTER_TEMP_MAX_STANDARD;
         return temperatureRepository
             .findTop5ByRoomIdOrderByCreatedDateDesc(roomId)
+            .stream()
             .map(e1 -> {
                 TemperatureDTO temperatureDTO = TemperatureDTO.of(e1);
                 if (e1.getValue() >= minTemp && e1.getValue() <= maxTemp) {
@@ -228,13 +231,13 @@ public class ComfortService {
                 }
                 return temperatureDTO;
             })
-            .stream()
             .collect(Collectors.toList());
     }
 
     private List<NoiseDTO> getTop5RecentRecordedNoiseData(String roomId) {
         return noiseRepository
             .findTop5ByRoomIdOrderByCreatedDateDesc(roomId)
+            .stream()
             .map(e1 -> {
                 NoiseDTO noiseDTO = NoiseDTO.of(e1);
                 if (e1.getValue() <= Constants.EU_NOISE_AVG_STANDARD) {
@@ -242,13 +245,13 @@ public class ComfortService {
                 }
                 return noiseDTO;
             })
-            .stream()
             .collect(Collectors.toList());
     }
 
     private List<LightDTO> getTop5RecentRecordedLightData(String roomId) {
         return lightRepository
             .findTop5ByRoomIdOrderByCreatedDateDesc(roomId)
+            .stream()
             .map(e1 -> {
                 LightDTO lightDTO = LightDTO.of(e1);
                 if (e1.getValue() >= Constants.EU_LIGHT_MIN_STANDARD && e1.getValue() <= Constants.EU_LIGHT_MAX_STANDARD) {
@@ -256,13 +259,13 @@ public class ComfortService {
                 }
                 return lightDTO;
             })
-            .stream()
             .collect(Collectors.toList());
     }
 
     private List<HumidityDTO> getTop5RecentRecordedHumidityData(String roomId) {
         return humidityRepository
             .findTop5ByRoomIdOrderByCreatedDateDesc(roomId)
+            .stream()
             .map(e1 -> {
                 HumidityDTO humidityDTO = HumidityDTO.of(e1);
                 if (e1.getValue() >= Constants.EU_HUMIDITY_MIN_STANDARD && e1.getValue() <= Constants.EU_HUMIDITY_MAX_STANDARD) {
@@ -270,7 +273,6 @@ public class ComfortService {
                 }
                 return humidityDTO;
             })
-            .stream()
             .collect(Collectors.toList());
     }
 }

@@ -15,6 +15,7 @@ import device from 'app/entities/device/device.reducer';
 // prettier-ignore
 import room from 'app/entities/room/room.reducer';
 import userPreference from 'app/modules/home/user-preference.reducer';
+import comfort from 'app/modules/rooms-comfort/comfort.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 const rootReducer = {
@@ -30,6 +31,7 @@ const rootReducer = {
   device,
   room,
   userPreference,
+  comfort,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar,
 };
