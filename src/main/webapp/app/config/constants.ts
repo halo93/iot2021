@@ -22,3 +22,41 @@ export const MAX_HUMIDITY = '60';
 export const MIN_LIGHT = '300';
 export const MAX_LIGHT = '500';
 export const AVG_DECIBEL = '40';
+export const AHP_ITEMS = [
+  {
+    value: '-9',
+    text: 'Absolutely Less Important',
+  },
+  {
+    value: '-7',
+    text: 'Very Much Less Important',
+  },
+  {
+    value: '-5',
+    text: 'Much Less Important',
+  },
+  {
+    value: '-3',
+    text: 'Somewhat Less Important',
+  },
+  {
+    value: '1',
+    text: 'Equal Important',
+  },
+  {
+    value: '3',
+    text: 'Somewhat More Important',
+  },
+  {
+    value: '5',
+    text: 'Much More Important',
+  },
+  {
+    value: '7',
+    text: 'Very Much Important',
+  },
+  {
+    value: '9',
+    text: 'Absolutely More Important',
+  },
+];

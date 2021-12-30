@@ -1,322 +1,346 @@
-import React, { useEffect } from 'react';
-import { Card, CardBody, CardSubtitle, Col, Collapse, Input, Row } from 'reactstrap';
-import {
-  AVG_DECIBEL,
-  MAX_HUMIDITY,
-  MAX_LIGHT,
-  MAX_TEMP_SUMMER,
-  MAX_TEMP_WINTER,
-  MIN_HUMIDITY,
-  MIN_LIGHT,
-  MIN_TEMP_SUMMER,
-  MIN_TEMP_WINTER,
-} from 'app/config/constants';
-import { isSummerTimeInEurope } from 'app/shared/util/date-utils';
+import React, { useEffect, useState } from 'react';
+import { Button, Col, Form, FormGroup, Label } from 'reactstrap';
+import RangeSlider from 'react-bootstrap-range-slider';
+import { AHP_ITEMS } from 'app/config/constants';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useAppDispatch } from 'app/config/store';
+import { getUserPreferenceEntities } from 'app/modules/home/user-preference.reducer';
 
-const SecondTab = clean => {
-  const [checkedOneB, setCheckedOneB] = React.useState(true);
-  const [checkedTwoB, setCheckedTwoB] = React.useState(true);
-  const [checkedThreeB, setCheckedThreeB] = React.useState(true);
-  const [checkedFourB, setCheckedFourB] = React.useState(true);
-  const [checkedFiveB, setCheckedFiveB] = React.useState(false);
+const SecondTab = () => {
+  const [humidityovertempPriority, setHumidityOverTempPriority] = useState(AHP_ITEMS.find(e => +e.value === 1));
+  const [noiseovertempPriority, setNoiseOverTempPriority] = useState(AHP_ITEMS.find(e => +e.value === 1));
+  const [noiseoverhumidityPriority, setNoiseOverHumidityPriority] = useState(AHP_ITEMS.find(e => +e.value === 1));
+  const [lightovertempPriority, setLightOverTempPriority] = useState(AHP_ITEMS.find(e => +e.value === 1));
+  const [lightoverhumidityPriority, setLightOverHumidityPriority] = useState(AHP_ITEMS.find(e => +e.value === 1));
+  const [lightovernoisePriority, setLightOverNoisePriority] = useState(AHP_ITEMS.find(e => +e.value === 1));
+
+  const [importanceObj, setImportanceObj] = useState({
+    temp: {
+      temp: 1,
+      light: 1,
+      humidity: 1,
+      noise: 1,
+    },
+    light: {
+      temp: 1,
+      light: 1,
+      humidity: 1,
+      noise: 1,
+    },
+    humidity: {
+      temp: 1,
+      light: 1,
+      humidity: 1,
+      noise: 1,
+    },
+    noise: {
+      temp: 1,
+      light: 1,
+      humidity: 1,
+      noise: 1,
+    },
+    weightedSum: {
+      tempSum: 4,
+      lightSum: 4,
+      noiseSum: 4,
+      humiditySum: 4,
+    },
+  });
+
+  const [priorityObj, setPriorityObj] = useState({
+    temp: {
+      temp: 0.25,
+      light: 0.25,
+      humidity: 0.25,
+      noise: 0.25,
+    },
+    light: {
+      temp: 0.25,
+      light: 0.25,
+      humidity: 0.25,
+      noise: 0.25,
+    },
+    humidity: {
+      temp: 0.25,
+      light: 0.25,
+      humidity: 0.25,
+      noise: 0.25,
+    },
+    noise: {
+      temp: 0.25,
+      light: 0.25,
+      humidity: 0.25,
+      noise: 0.25,
+    },
+    priority: {
+      temperaturePriority: 0.25,
+      lightPriority: 0.25,
+      humidityPriority: 0.25,
+      noisePriority: 0.25,
+    },
+  });
+
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (clean) {
-      setCheckedOneB(true);
-      setCheckedTwoB(true);
-      setCheckedThreeB(true);
-      setCheckedFourB(true);
-      setCheckedFiveB(false);
-    }
-  }, []);
+    dispatch(getUserPreferenceEntities(priorityObj.priority));
+  }, [importanceObj, priorityObj]);
 
-  const handleChangeOneB = () => {
-    setCheckedOneB(!checkedOneB);
+  const submitPreference = () => {
+    const changedImportanceObj = {
+      ...importanceObj,
+      temp: {
+        temp: 1,
+        light: +lightovertempPriority.value > 0 ? 1 / +lightovertempPriority.value : -1 * +lightovertempPriority.value,
+        humidity: +humidityovertempPriority.value > 0 ? 1 / +humidityovertempPriority.value : -1 * +humidityovertempPriority.value,
+        noise: +noiseovertempPriority.value > 0 ? 1 / +noiseovertempPriority.value : -1 * +noiseovertempPriority.value,
+      },
+      light: {
+        temp: +lightovertempPriority.value > 0 ? +lightovertempPriority.value : -1 / +lightovertempPriority.value,
+        light: 1,
+        humidity: +lightoverhumidityPriority.value > 0 ? +lightoverhumidityPriority.value : -1 / +lightoverhumidityPriority.value,
+        noise: +lightovernoisePriority.value > 0 ? +lightovernoisePriority.value : -1 / +lightovernoisePriority.value,
+      },
+      humidity: {
+        temp: +humidityovertempPriority.value > 0 ? +humidityovertempPriority.value : -1 / +humidityovertempPriority.value,
+        light: +lightoverhumidityPriority.value > 0 ? 1 / +lightoverhumidityPriority.value : -1 * +lightoverhumidityPriority.value,
+        humidity: 1,
+        noise: +noiseoverhumidityPriority.value > 0 ? 1 / +noiseoverhumidityPriority.value : -1 * +noiseoverhumidityPriority.value,
+      },
+      noise: {
+        temp: +noiseovertempPriority.value > 0 ? +noiseovertempPriority.value : -1 / +noiseovertempPriority.value,
+        light: +lightovernoisePriority.value > 0 ? 1 / +lightovernoisePriority.value : -1 * +lightovernoisePriority.value,
+        humidity: +noiseoverhumidityPriority.value > 0 ? +noiseoverhumidityPriority.value : -1 / +noiseoverhumidityPriority.value,
+        noise: 1,
+      },
+    };
+    changedImportanceObj.weightedSum = {
+      tempSum:
+        changedImportanceObj.temp.temp +
+        changedImportanceObj.humidity.temp +
+        changedImportanceObj.noise.temp +
+        changedImportanceObj.light.temp,
+      lightSum:
+        changedImportanceObj.light.light +
+        changedImportanceObj.humidity.light +
+        changedImportanceObj.noise.light +
+        changedImportanceObj.temp.light,
+      noiseSum:
+        changedImportanceObj.noise.noise +
+        changedImportanceObj.humidity.noise +
+        changedImportanceObj.light.noise +
+        changedImportanceObj.temp.noise,
+      humiditySum:
+        changedImportanceObj.humidity.humidity +
+        changedImportanceObj.light.humidity +
+        changedImportanceObj.noise.humidity +
+        changedImportanceObj.temp.humidity,
+    };
+    console.log('changedImportanceObj: ', changedImportanceObj);
+    setImportanceObj(changedImportanceObj);
+
+    const changedPriorityObj = {
+      ...priorityObj,
+      temp: {
+        temp: changedImportanceObj.temp.temp / changedImportanceObj.weightedSum.tempSum,
+        light: changedImportanceObj.temp.light / changedImportanceObj.weightedSum.lightSum,
+        humidity: changedImportanceObj.temp.humidity / changedImportanceObj.weightedSum.humiditySum,
+        noise: changedImportanceObj.temp.noise / changedImportanceObj.weightedSum.noiseSum,
+      },
+      light: {
+        temp: changedImportanceObj.light.temp / changedImportanceObj.weightedSum.tempSum,
+        light: changedImportanceObj.light.light / changedImportanceObj.weightedSum.lightSum,
+        humidity: changedImportanceObj.light.humidity / changedImportanceObj.weightedSum.humiditySum,
+        noise: changedImportanceObj.light.noise / changedImportanceObj.weightedSum.noiseSum,
+      },
+      humidity: {
+        temp: changedImportanceObj.humidity.temp / changedImportanceObj.weightedSum.tempSum,
+        light: changedImportanceObj.humidity.light / changedImportanceObj.weightedSum.lightSum,
+        humidity: changedImportanceObj.humidity.humidity / changedImportanceObj.weightedSum.humiditySum,
+        noise: changedImportanceObj.humidity.noise / changedImportanceObj.weightedSum.noiseSum,
+      },
+      noise: {
+        temp: changedImportanceObj.noise.temp / changedImportanceObj.weightedSum.tempSum,
+        light: changedImportanceObj.noise.light / changedImportanceObj.weightedSum.lightSum,
+        humidity: changedImportanceObj.noise.humidity / changedImportanceObj.weightedSum.humiditySum,
+        noise: changedImportanceObj.noise.noise / changedImportanceObj.weightedSum.noiseSum,
+      },
+    };
+    changedPriorityObj.priority = {
+      temperaturePriority:
+        (changedPriorityObj.temp.temp + changedPriorityObj.temp.light + changedPriorityObj.temp.humidity + changedPriorityObj.temp.noise) /
+        4,
+      lightPriority:
+        (changedPriorityObj.light.temp +
+          changedPriorityObj.light.humidity +
+          changedPriorityObj.light.noise +
+          changedPriorityObj.light.light) /
+        4,
+      humidityPriority:
+        (changedPriorityObj.humidity.humidity +
+          changedPriorityObj.humidity.light +
+          changedPriorityObj.humidity.noise +
+          changedPriorityObj.humidity.temp) /
+        4,
+      noisePriority:
+        (changedPriorityObj.noise.noise +
+          changedPriorityObj.noise.light +
+          changedPriorityObj.noise.humidity +
+          changedPriorityObj.noise.temp) /
+        4,
+    };
+    console.log(changedPriorityObj);
+    setPriorityObj(changedPriorityObj);
   };
-  const handleChangeTwoB = () => {
-    setCheckedTwoB(!checkedTwoB);
+
+  const onChangeHumidityOverTempSlider = event => {
+    const foundAHPItem = AHP_ITEMS.find(e => {
+      return e.value === event.target.value;
+    });
+    if (foundAHPItem) {
+      setHumidityOverTempPriority(foundAHPItem);
+    }
   };
-  const handleChangeThreeB = () => {
-    setCheckedThreeB(!checkedThreeB);
+
+  const onChangeNoiseOverTempSlider = event => {
+    const foundAHPItem = AHP_ITEMS.find(e => {
+      return e.value === event.target.value;
+    });
+    if (foundAHPItem) {
+      setNoiseOverTempPriority(foundAHPItem);
+    }
   };
-  const handleChangeFourB = () => {
-    setCheckedFourB(!checkedFourB);
+
+  const onChangeNoiseOverHumiditySlider = event => {
+    const foundAHPItem = AHP_ITEMS.find(e => {
+      return e.value === event.target.value;
+    });
+    if (foundAHPItem) {
+      setNoiseOverHumidityPriority(foundAHPItem);
+    }
   };
-  const handleChangeFiveB = () => {
-    setCheckedFiveB(!checkedFiveB);
+
+  const onChangeLightOverTempSlider = event => {
+    const foundAHPItem = AHP_ITEMS.find(e => {
+      return e.value === event.target.value;
+    });
+    if (foundAHPItem) {
+      setLightOverTempPriority(foundAHPItem);
+    }
+  };
+
+  const onChangeLightOverHumiditySlider = event => {
+    const foundAHPItem = AHP_ITEMS.find(e => {
+      return e.value === event.target.value;
+    });
+    if (foundAHPItem) {
+      setLightOverHumidityPriority(foundAHPItem);
+    }
+  };
+
+  const onChangeLightOverNoiseSlider = event => {
+    const foundAHPItem = AHP_ITEMS.find(e => {
+      return e.value === event.target.value;
+    });
+    if (foundAHPItem) {
+      setLightOverNoisePriority(foundAHPItem);
+    }
   };
 
   return (
-    <div className="SecondTab">
-      <p style={{ fontStyle: 'italic', textAlign: 'center' }}>
-        Dear customer, please note that you can uncheck your least preferred criteria and fill your desired room capacity (optional).
-      </p>
-      <div className="mt-2">
-        <Row>
-          <Col md="6">
-            <Row>
-              <Col md="6" className="custom-control custom-switch mb-2 mt-2" style={{ paddingLeft: '45px' }}>
-                <Input
-                  name="Temperature"
-                  type="checkbox"
-                  className="custom-control-input"
-                  id="customSwitchesCheckedTemperature2"
-                  checked={checkedOneB}
-                  onChange={handleChangeOneB}
-                />
-                <label className="custom-control-label" htmlFor="customSwitchesCheckedTemperature2">
-                  <span className="mr-2"> Temperature </span>
-                </label>
-              </Col>
-            </Row>
+    <div>
+      <div className="SecondTab2, text-center">
+        <p style={{ fontStyle: 'italic', textAlign: 'center' }}>
+          Dear customer, please select your most preferred criteria in order of importance.
+        </p>
+        <Form>
+          <FormGroup row={true}>
+            <Col xs="4" className="pl5">
+              <Label>Humidity over Temperature</Label>
+            </Col>
+            <Col xs="4">
+              <RangeSlider max={9} min={-9} step={2} value={humidityovertempPriority.value} onChange={onChangeHumidityOverTempSlider} />
+            </Col>
+            <Col xs="4">
+              <Label>{humidityovertempPriority.text}</Label>
+            </Col>
+          </FormGroup>
 
-            <Collapse isOpen={checkedOneB}>
-              <Card>
-                <CardBody>
-                  <CardSubtitle style={{ color: 'black' }}>
-                    <p> Please input your minimum and maximum acceptable temperature values. </p>
-                    <Row>
-                      <Col md="5">
-                        <label>
-                          <Input
-                            name="min_temp"
-                            id="min_temp"
-                            type="text"
-                            placeholder="Minimum"
-                            className="text-left mt-1 mb-1 ml-1"
-                            value={isSummerTimeInEurope() ? MIN_TEMP_SUMMER : MIN_TEMP_WINTER}
-                          />
-                        </label>
-                      </Col>
-                      <Col md="5">
-                        <label>
-                          <Input
-                            name="max_temp"
-                            id="max_temp"
-                            type="text"
-                            placeholder="Maximum"
-                            className="text-left mt-1 mb-1 mr-2 ml-2"
-                            value={isSummerTimeInEurope() ? MAX_TEMP_SUMMER : MAX_TEMP_WINTER}
-                          />
-                        </label>
-                      </Col>
-                    </Row>
-                  </CardSubtitle>
-                </CardBody>
-              </Card>
-            </Collapse>
-          </Col>
+          <FormGroup row={true}>
+            <Col xs="4">
+              <Label>Noise over Temperature</Label>
+            </Col>
+            <Col xs="4">
+              <RangeSlider max={9} min={-9} step={2} value={noiseovertempPriority.value} onChange={onChangeNoiseOverTempSlider} />
+            </Col>
+            <Col xs="4">
+              <Label>{noiseovertempPriority.text}</Label>
+            </Col>
+          </FormGroup>
 
-          <Col md="6">
-            <Row>
-              <Col md="6" className="custom-control custom-switch mb-2 mt-2" style={{ paddingLeft: '45px' }}>
-                <Input
-                  name="Humidity"
-                  className="custom-control-input"
-                  id="customSwitchesCheckedHumidity2"
-                  type="checkbox"
-                  checked={checkedTwoB}
-                  onChange={handleChangeTwoB}
-                />
-                <label className="custom-control-label" htmlFor="customSwitchesCheckedHumidity2">
-                  <span className="mr-2"> Humidity </span>
-                </label>
-              </Col>
-            </Row>
+          <FormGroup row={true}>
+            <Col xs="4">
+              <Label>Noise over Humidity</Label>
+            </Col>
+            <Col xs="4">
+              <RangeSlider max={9} min={-9} step={2} value={noiseoverhumidityPriority.value} onChange={onChangeNoiseOverHumiditySlider} />
+            </Col>
+            <Col xs="4">
+              <Label>{noiseoverhumidityPriority.text}</Label>
+            </Col>
+          </FormGroup>
 
-            <Collapse isOpen={checkedTwoB}>
-              <Card>
-                <CardBody>
-                  <CardSubtitle style={{ color: 'black' }}>
-                    <p> Please input your minimum and maximum acceptable humidity values.</p>
-                    <Row>
-                      <Col md="5">
-                        <label>
-                          <Input
-                            name="min_humidity"
-                            id="min_humidity"
-                            type="text"
-                            placeholder="Minimum"
-                            className="text-left mt-1 mb-1 ml-1"
-                            value={MIN_HUMIDITY}
-                          />
-                        </label>
-                      </Col>
-                      <Col md="5">
-                        <label>
-                          <Input
-                            name="min_humidity"
-                            id="min_humidity"
-                            type="text"
-                            placeholder="Maximum"
-                            className="text-left mt-1 mb-1 mr-2 ml-2"
-                            value={MAX_HUMIDITY}
-                          />
-                        </label>
-                      </Col>
-                    </Row>
-                  </CardSubtitle>
-                </CardBody>
-              </Card>
-            </Collapse>
-          </Col>
-        </Row>
+          <FormGroup row={true}>
+            <Col xs="4">
+              <Label>Light over Temperature</Label>
+            </Col>
+            <Col xs="4">
+              <RangeSlider max={9} min={-9} step={2} value={lightovertempPriority.value} onChange={onChangeLightOverTempSlider} />
+            </Col>
+            <Col xs="4">
+              <Label>{lightovertempPriority.text}</Label>
+            </Col>
+          </FormGroup>
+
+          <FormGroup row={true}>
+            <Col xs="4">
+              <Label>Light over Humidity</Label>
+            </Col>
+            <Col xs="4">
+              <RangeSlider max={9} min={-9} step={2} value={lightoverhumidityPriority.value} onChange={onChangeLightOverHumiditySlider} />
+            </Col>
+            <Col xs="4">
+              <Label>{lightoverhumidityPriority.text}</Label>
+            </Col>
+          </FormGroup>
+
+          <FormGroup row={true}>
+            <Col xs="4">
+              <Label>Light over Noise</Label>
+            </Col>
+            <Col xs="4">
+              <RangeSlider max={9} min={-9} step={2} value={lightovernoisePriority.value} onChange={onChangeLightOverNoiseSlider} />
+            </Col>
+            <Col xs="4">
+              <Label>{lightovernoisePriority.text}</Label>
+            </Col>
+          </FormGroup>
+        </Form>
       </div>
 
-      <div>
-        <Row>
-          <Col md="6">
-            <Row>
-              <Col md="6" className="custom-control custom-switch mb-2 mt-2" style={{ paddingLeft: '45px' }}>
-                <Input
-                  name="Light"
-                  className="custom-control-input"
-                  id="customSwitchesCheckedLight2"
-                  type="checkbox"
-                  checked={checkedThreeB}
-                  onChange={handleChangeThreeB}
-                />
-                <label className="custom-control-label" htmlFor="customSwitchesCheckedLight2">
-                  <span className="mr-2"> Light </span>
-                </label>
-              </Col>
-            </Row>
-
-            <Collapse isOpen={checkedThreeB}>
-              <Card>
-                <CardBody>
-                  <CardSubtitle style={{ color: 'black' }}>
-                    <p> Please input your minimum and maximum acceptable light intensity values. </p>
-                    <Row>
-                      <Col md="5">
-                        <label>
-                          <Input
-                            name="min_light"
-                            id="min_light"
-                            type="text"
-                            placeholder="Minimum"
-                            className="text-left mt-1 mb-1 ml-1"
-                            value={MIN_LIGHT}
-                          />
-                        </label>
-                      </Col>
-                      <Col md="5">
-                        <label>
-                          <Input
-                            name="max_light"
-                            id="max_light"
-                            type="text"
-                            placeholder="Maximum"
-                            className="text-left mt-1 mb-1 mr-2 ml-2"
-                            value={MAX_LIGHT}
-                          />
-                        </label>
-                      </Col>
-                    </Row>
-                  </CardSubtitle>
-                </CardBody>
-              </Card>
-            </Collapse>
-          </Col>
-
-          <Col md="6">
-            <Row>
-              <Col md="6" className="custom-control custom-switch mb-2 mt-2" style={{ paddingLeft: '45px' }}>
-                <Input
-                  name="Noise"
-                  type="checkbox"
-                  className="custom-control-input"
-                  id="customSwitchesCheckedNoise2"
-                  checked={checkedFourB}
-                  onChange={handleChangeFourB}
-                />
-                <label className="custom-control-label" htmlFor="customSwitchesCheckedNoise2">
-                  <span className="mr-2"> Noise </span>
-                </label>
-              </Col>
-            </Row>
-
-            <Collapse isOpen={checkedFourB}>
-              <Card>
-                <CardBody>
-                  <CardSubtitle style={{ color: 'black' }}>
-                    <p> Please input your average acceptable noise value in decibel. </p>
-                    &nbsp; &nbsp; &nbsp;
-                    <Row>
-                      <Col md="5">
-                        <label>
-                          <Input
-                            name="avg_decibel"
-                            id="avg_decibel"
-                            type="text"
-                            placeholder="Average Decibel"
-                            className="text-left mt-1 mb-1 ml-1"
-                            value={AVG_DECIBEL}
-                          />
-                        </label>
-                      </Col>
-                    </Row>
-                  </CardSubtitle>
-                </CardBody>
-              </Card>
-            </Collapse>
-          </Col>
-        </Row>
-      </div>
-
-      <div>
-        <Row>
-          <Col md="6">
-            <Row>
-              <Col md="8" className="custom-control custom-switch mb-2 mt-2" style={{ paddingLeft: '45px' }}>
-                <Input
-                  name="Room_Capacity"
-                  type="checkbox"
-                  className="custom-control-input"
-                  id="customSwitchesCheckedRoom_Capacity2"
-                  onChange={handleChangeFiveB}
-                />
-                <label className="custom-control-label" htmlFor="customSwitchesCheckedRoom_Capacity2">
-                  <span className="mr-2"> Room Capacity </span>
-                </label>
-              </Col>
-            </Row>
-
-            <Collapse isOpen={checkedFiveB}>
-              <Card>
-                <CardBody>
-                  <CardSubtitle style={{ color: 'black' }}>
-                    <p> Please input your minimum and maximum acceptable room capacity. </p>
-                    <Row>
-                      <Col md="5">
-                        <label>
-                          <Input
-                            name="min_room_capacity"
-                            id="min_room_capacity"
-                            type="text"
-                            placeholder="Minimum"
-                            className="text-left mt-1 mb-1 ml-1"
-                          />
-                        </label>
-                      </Col>
-                      <Col md="5">
-                        <label>
-                          <Input
-                            name="max_room_capacity"
-                            id="max_room_capacity"
-                            type="text"
-                            placeholder="Maximum"
-                            className="text-left mt-1 mb-1 mr-2 ml-2"
-                          />
-                        </label>
-                      </Col>
-                    </Row>
-                  </CardSubtitle>
-                </CardBody>
-              </Card>
-            </Collapse>
-          </Col>
-        </Row>
+      <hr style={{ backgroundColor: 'gray' }} />
+      <div className="d-flex justify-content-center mt-4">
+        <Button
+          color="primary"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          type="button"
+          onClick={submitPreference}
+          className="btn btn-primary"
+        >
+          <FontAwesomeIcon icon="save" />
+          &nbsp; Submit my Preference
+        </Button>
       </div>
     </div>
   );

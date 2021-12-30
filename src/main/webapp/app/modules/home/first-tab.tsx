@@ -1,21 +1,18 @@
 import React, { useEffect } from 'react';
-import { Card, CardBody, CardSubtitle, Col, Collapse, Input, Row } from 'reactstrap';
+import { Button, Card, CardBody, CardSubtitle, Col, Collapse, Input, Row } from 'reactstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { getEntities } from 'app/modules/home/user-preference.reducer';
+import { useAppDispatch } from 'app/config/store';
 
-const FirstTab = ({
-  clean,
-  copiedTemperature,
-  setCopiedTemperature,
-  copiedLight,
-  setCopiedLight,
-  copiedNoise,
-  setCopiedNoise,
-  copiedHumidity,
-  setCopiedHumidity,
-}) => {
+const FirstTab = ({ clean, temperature, setTemperature, light, setLight, noise, setNoise, humidity, setHumidity }) => {
   const [checkedOneA, setCheckedOneA] = React.useState(true);
   const [checkedTwoA, setCheckedTwoA] = React.useState(true);
   const [checkedThreeA, setCheckedThreeA] = React.useState(true);
   const [checkedFourA, setCheckedFourA] = React.useState(true);
+  const [copiedTemperature, setCopiedTemperature] = React.useState(temperature);
+  const [copiedLight, setCopiedLight] = React.useState(light);
+  const [copiedNoise, setCopiedNoise] = React.useState(noise);
+  const [copiedHumidity, setCopiedHumidity] = React.useState(humidity);
 
   useEffect(() => {
     if (clean) {
@@ -25,6 +22,16 @@ const FirstTab = ({
       setCheckedFourA(true);
     }
   }, []);
+
+  const dispatch = useAppDispatch();
+
+  const getAllEntities = () => {
+    dispatch(getEntities({ temperature, humidity, light, noise }));
+  };
+
+  useEffect(() => {
+    getAllEntities();
+  }, [temperature, light, noise, humidity]);
 
   const handleChangeOneA = () => {
     setCheckedOneA(!checkedOneA);
@@ -42,6 +49,14 @@ const FirstTab = ({
     setCheckedFourA(!checkedFourA);
     setCopiedNoise(!copiedNoise);
   };
+
+  const submitPreference = () => {
+    setTemperature(copiedTemperature);
+    setLight(copiedLight);
+    setNoise(copiedNoise);
+    setHumidity(copiedHumidity);
+  };
+
   return (
     <div className="FirstTab">
       <p style={{ fontStyle: 'italic', textAlign: 'center' }}>
@@ -165,6 +180,21 @@ const FirstTab = ({
             </Collapse>
           </Col>
         </Row>
+      </div>
+
+      <hr style={{ backgroundColor: 'gray' }} />
+      <div className="d-flex justify-content-center mt-4">
+        <Button
+          color="primary"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          type="button"
+          onClick={submitPreference}
+          className="btn btn-primary"
+        >
+          <FontAwesomeIcon icon="save" />
+          &nbsp; Submit my Preference
+        </Button>
       </div>
     </div>
   );
