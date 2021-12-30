@@ -4,6 +4,7 @@ import com.genial.iot.service.ComfortService;
 import com.genial.iot.service.dto.ComfortDTO;
 import com.genial.iot.service.dto.ComfortDetailDTO;
 import com.genial.iot.service.dto.SearchEUComfortDTO;
+import com.genial.iot.service.dto.SearchUserPreferenceComfortDTO;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -40,5 +41,13 @@ public class ComfortResource {
         log.debug("REST request to get a Comfort with RoomID : {}", roomId);
         Optional<ComfortDetailDTO> result = comfortService.searchComfortDetailByRoomId(roomId);
         return ResponseUtil.wrapOrNotFound(result);
+    }
+
+    @PostMapping("/comforts/user-preferences")
+    public ResponseEntity<List<ComfortDTO>> searchRoomComfortsByUserPreference(
+        @RequestBody SearchUserPreferenceComfortDTO searchUserPreferenceComfortDTO
+    ) {
+        log.debug("REST request to fetch a list of Comfort with User Defined Priority : {}", searchUserPreferenceComfortDTO);
+        return ResponseEntity.ok().body(comfortService.searchComfortsByUserPreference(searchUserPreferenceComfortDTO));
     }
 }
