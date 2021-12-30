@@ -3,20 +3,33 @@ import TempLineChartComponent from './temperature-line-chart';
 import HumidLineChartComponent from './humidity-line-chart';
 import NoiseLineChartComponent from './noise-line-chart';
 import LightLineChartComponent from './light-line-chart';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './charts.css';
-import { Redirect, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 
-import { Col, Row } from 'reactstrap';
+import { CardImg, Col, Row } from 'reactstrap';
 import { faFileAudio, faLightbulb, faThermometerFull, faWater } from '@fortawesome/free-solid-svg-icons';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
+import { getEntity } from 'app/modules/rooms-comfort/comfort.reducer';
 
-const ComfortPageComponent = () => {
+const ComfortPageComponent = (props: RouteComponentProps<{ id: string }>) => {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getEntity(props.match.params.id));
+  }, []);
+
+  const comfortEntity = useAppSelector(state => state.comfort.entity);
+
   return (
     <div>
-      <h2 className="element">
-        <p style={{ fontSize: 25, textAlign: 'left' }}> Comforts Details for the selected Room </p>
-      </h2>
+      {comfortEntity.room && (
+        <h2 className="element">
+          <p style={{ fontSize: 25, textAlign: 'left' }}> Comforts Details for {comfortEntity.room.name} </p>
+        </h2>
+      )}
+      {console.log(comfortEntity)}
       <div className="center">
         <div className="element">
           <Row>
@@ -26,7 +39,7 @@ const ComfortPageComponent = () => {
                   <FontAwesomeIcon icon={faThermometerFull} /> Temperature{' '}
                 </p>
               </h2>
-              <TempLineChartComponent />
+              <TempLineChartComponent data={comfortEntity.temperatures} />
             </Col>
             <Col md="6">
               <h2>
@@ -35,11 +48,10 @@ const ComfortPageComponent = () => {
                   <FontAwesomeIcon icon={faWater} /> Humidity{' '}
                 </p>
               </h2>
-              <HumidLineChartComponent />
+              <HumidLineChartComponent data={comfortEntity.humidity} />
             </Col>
           </Row>
         </div>
-
         <div className="manasik">
           <Row>
             <Col md="6">
@@ -49,7 +61,7 @@ const ComfortPageComponent = () => {
                   <FontAwesomeIcon icon={faLightbulb} /> Light{' '}
                 </p>
               </h2>
-              <LightLineChartComponent />
+              <LightLineChartComponent data={comfortEntity.lights} />
             </Col>
             <Col md="6">
               <h2>
@@ -58,12 +70,13 @@ const ComfortPageComponent = () => {
                   <FontAwesomeIcon icon={faFileAudio} /> Noise{' '}
                 </p>
               </h2>
-              <NoiseLineChartComponent />
+              <NoiseLineChartComponent data={comfortEntity.noises} />
             </Col>
           </Row>
         </div>
       </div>
       <hr className="new4"></hr>
+
       <div>
         <h2 className="element">
           <p style={{ fontSize: 25, textAlign: 'left' }}> Current Statistics </p>
@@ -72,28 +85,34 @@ const ComfortPageComponent = () => {
           <Col md="4">
             <h2>
               {' '}
-              <p style={{ fontSize: 18 }}>
-                {' '}
-                <span className="temperature"></span> Temperature:{' '}
-              </p>
+              {comfortEntity.temperatures && (
+                <p style={{ fontSize: 18 }}>
+                  {' '}
+                  <span className="temperature"></span> Temperature: {comfortEntity.temperatures[0].value} C
+                </p>
+              )}
             </h2>
           </Col>
           <Col md="4">
             <h2>
               {' '}
-              <p style={{ fontSize: 18 }}>
-                {' '}
-                <span className="humidity"></span> Humidity:{' '}
-              </p>
+              {comfortEntity.humidity && (
+                <p style={{ fontSize: 18 }}>
+                  {' '}
+                  <span className="humidity"></span> Humidity: {comfortEntity.humidity[0].value} %
+                </p>
+              )}
             </h2>
           </Col>
           <Col md="4">
             <h2>
               {' '}
-              <p style={{ fontSize: 18 }}>
-                {' '}
-                <span className="light"></span> Light:{' '}
-              </p>
+              {comfortEntity.lights && (
+                <p style={{ fontSize: 18 }}>
+                  {' '}
+                  <span className="light"></span> Light: {comfortEntity.lights[0].value} Lux
+                </p>
+              )}
             </h2>
           </Col>
         </Row>
@@ -101,19 +120,23 @@ const ComfortPageComponent = () => {
           <Col md="4">
             <h2>
               {' '}
-              <p style={{ fontSize: 18 }}>
-                {' '}
-                <span className="noise"></span> Noise:{' '}
-              </p>
+              {comfortEntity.noises && (
+                <p style={{ fontSize: 18 }}>
+                  {' '}
+                  <span className="noise"></span> Noise: {comfortEntity.noises[0].value} dB
+                </p>
+              )}
             </h2>
           </Col>
           <Col md="4">
             <h2>
               {' '}
-              <p style={{ fontSize: 18 }}>
-                {' '}
-                <span className="capacity"></span> Room Capacity:{' '}
-              </p>
+              {comfortEntity.room && (
+                <p style={{ fontSize: 18 }}>
+                  {' '}
+                  <span className="capacity"></span> Room Capacity: {comfortEntity.room.capacity}
+                </p>
+              )}
             </h2>
           </Col>
         </Row>
@@ -121,7 +144,13 @@ const ComfortPageComponent = () => {
       <hr className="new4"></hr>
       <div>
         <h2>
-          <p style={{ fontSize: 25, textAlign: 'left' }}> Map and Photos </p>
+          <p style={{ fontSize: 25, textAlign: 'left' }}> Photos </p>
+          {comfortEntity.room && (
+            <img
+              src={`data:${comfortEntity.room.imagesContentType};base64,${comfortEntity.room.images}`}
+              style={{ display: 'block', marginLeft: 'auto', marginRight: 'auto', width: '40%', height: '40%', borderRadius: '5px' }}
+            />
+          )}
         </h2>
       </div>
     </div>
