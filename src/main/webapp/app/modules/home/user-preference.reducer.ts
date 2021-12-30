@@ -5,6 +5,12 @@ import { createEntitySlice, EntityState } from 'app/shared/reducers/reducer.util
 import { IUserPreference, defaultValue } from 'app/shared/model/user-preference.model';
 
 export type IUserPreferenceQueryParams = { temperature?: boolean; humidity?: boolean; light?: boolean; noise?: boolean };
+export type IUserPreferenceBody = {
+  temperaturePriority: number;
+  lightPriority: number;
+  noisePriority: number;
+  humidityPriority: number;
+};
 
 const initialState: EntityState<IUserPreference> = {
   loading: false,
@@ -30,6 +36,14 @@ export const getEntities = createAsyncThunk(
   }
 );
 
+export const getUserPreferenceEntities = createAsyncThunk(
+  'user-preference/fetch_user_preference_entity_list',
+  async (entity: IUserPreferenceBody) => {
+    const requestUrl = `${apiUrl}/user-preferences`;
+    return await axios.post<IUserPreference[]>(requestUrl, entity);
+  }
+);
+
 // slice
 
 export const UserPreferenceSlice = createEntitySlice({
@@ -45,7 +59,20 @@ export const UserPreferenceSlice = createEntitySlice({
           totalItems: action.payload.data.length,
         };
       })
+      .addMatcher(isFulfilled(getUserPreferenceEntities), (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          entities: action.payload.data,
+          totalItems: action.payload.data.length,
+        };
+      })
       .addMatcher(isPending(getEntities), state => {
+        state.errorMessage = null;
+        state.updateSuccess = false;
+        state.loading = true;
+      })
+      .addMatcher(isPending(getUserPreferenceEntities), state => {
         state.errorMessage = null;
         state.updateSuccess = false;
         state.loading = true;

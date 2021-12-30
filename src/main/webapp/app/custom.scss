@@ -56,10 +56,14 @@ ul.nav li.active {
   background: #39a2db;
 }
 
-.FirstTab,
-.SecondTab {
+.FirstTab {
   font-size: 1rem;
   justify-content: center;
+}
+
+.SecondTab2 {
+  font-size: 1rem;
+  justify-content: left;
 }
 
 .outlet {

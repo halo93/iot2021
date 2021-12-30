@@ -9,27 +9,18 @@ import RoomsCardComponent from 'app/modules/home/rooms-card';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getEntities } from 'app/modules/home/user-preference.reducer';
 import { transformToTwoDimensionalArray } from 'app/shared/util/entity-utils';
+import RoomsCardTab2Component from 'app/modules/home/rooms-card-tab-2';
 
 export const UserPageComponent = () => {
-  const dispatch = useAppDispatch();
   const [temperature, setTemperature] = useState(true);
   const [light, setLight] = useState(true);
   const [noise, setNoise] = useState(true);
   const [humidity, setHumidity] = useState(true);
+  const [tab, setTab] = useState(1);
 
   const comfortList = useAppSelector(state => state.userPreference.entities);
   const loading = useAppSelector(state => state.userPreference.loading);
   const totalItems = useAppSelector(state => state.userPreference.totalItems);
-
-  const getAllEntities = () => {
-    dispatch(getEntities({ temperature, humidity, light, noise }));
-  };
-
-  useEffect(() => {
-    getAllEntities();
-  }, [temperature, light, noise, humidity]);
-
-  // console.log(comfortList)
 
   return (
     <div>
@@ -44,6 +35,8 @@ export const UserPageComponent = () => {
           setNoise={setNoise}
           humidity={humidity}
           setHumidity={setHumidity}
+          tab={tab}
+          setTab={setTab}
         />
       </div>
       <div>
@@ -80,16 +73,21 @@ export const UserPageComponent = () => {
           comfortList.length > 0 &&
           transformToTwoDimensionalArray(comfortList, 4).map((itemRow, key) => (
             <Row key={`row-list-${key}`} className="mt-3">
-              {itemRow.map((comfort, id) => (
-                <RoomsCardComponent
-                  key={`comfort-${id}`}
-                  comfort={comfort}
-                  temperature={temperature}
-                  humidity={humidity}
-                  light={light}
-                  noise={noise}
-                />
-              ))}
+              {itemRow.map((comfort, id) =>
+                tab === 1 ? (
+                  <RoomsCardComponent
+                    key={`comfort-${id}`}
+                    comfort={comfort}
+                    temperature={temperature}
+                    humidity={humidity}
+                    light={light}
+                    noise={noise}
+                  />
+                ) : (
+                  // tab 2 cards
+                  <RoomsCardTab2Component key={`comfort-${id}`} comfort={comfort} />
+                )
+              )}
             </Row>
           ))}
       </div>
