@@ -3,6 +3,7 @@ import { ITemperature } from 'app/shared/model/temperature.model';
 import { IHumidity } from 'app/shared/model/humidity.model';
 import { ILight } from 'app/shared/model/light.model';
 import { INoise } from 'app/shared/model/noise.model';
+import { Rank } from 'app/shared/model/enumerations/rank.model';
 
 export interface IUserPreference {
   room?: IRoom | null;
@@ -10,7 +11,7 @@ export interface IUserPreference {
   humidity?: IHumidity | null;
   light?: ILight | null;
   noise?: INoise | null;
-  rank?: string;
+  rank?: Rank;
   createdDate?: Date | null;
 }
 

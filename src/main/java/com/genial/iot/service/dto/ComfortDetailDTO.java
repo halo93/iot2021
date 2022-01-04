@@ -1,5 +1,7 @@
 package com.genial.iot.service.dto;
 
+import static com.genial.iot.domain.RoomGrade.*;
+
 import java.util.List;
 import lombok.Data;
 
@@ -11,5 +13,5 @@ public class ComfortDetailDTO {
     private List<LightDTO> lights;
     private List<HumidityDTO> humidity;
     private List<NoiseDTO> noises;
-    private ComfortDTO.Rank rank;
+    private Rank rank;
 }

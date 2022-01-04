@@ -1,7 +1,7 @@
 package com.genial.iot.service.dto;
 
+import com.genial.iot.domain.RoomGrade.Rank;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 @Data
 public class ComfortDTO {
@@ -14,13 +14,4 @@ public class ComfortDTO {
     private Rank rank;
 
     private double totalPoint = 0;
-
-    @RequiredArgsConstructor
-    public enum Rank {
-        EXCELLENT,
-        GOOD,
-        NORMAL,
-        BAD,
-        NA,
-    }
 }

@@ -4,6 +4,7 @@ import { faThermometerFull, faLightbulb, faWater, faFileAudio } from '@fortaweso
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
+import { Rank } from 'app/shared/model/enumerations/rank.model';
 
 const RoomsCardTab2Component = props => {
   const [comfort, setComfort] = useState(props.comfort);
@@ -35,7 +36,7 @@ const RoomsCardTab2Component = props => {
             </h5>
           </CardTitle>
           <CardSubtitle className="ribbon-wrapper text-center">
-            <div className="ribbon-card">{comfort.rank || 'N/A'}</div>
+            <div className="ribbon-card">{(comfort.rank && Rank[comfort.rank]) || Rank.NA}</div>
           </CardSubtitle>
           <CardText>
             <ListGroup>
