@@ -27,7 +27,7 @@ const RoomsCardTab2Component = props => {
         <CardBody>
           <CardTitle>
             <h5>
-              <Link to="/comfort">{comfort.room.name}</Link>
+              <Link to={`/comfort/${comfort.room.id}`}>{comfort.room.name}</Link>
               &nbsp;{' '}
               <Badge pill color="primary">
                 {' '}
