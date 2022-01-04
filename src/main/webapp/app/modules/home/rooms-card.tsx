@@ -3,6 +3,7 @@ import { Badge, Card, CardBody, CardImg, CardSubtitle, CardText, CardTitle, Col,
 import { faThermometerFull, faLightbulb, faWater, faFileAudio } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
+import { Rank } from 'app/shared/model/enumerations/rank.model';
 
 const RoomsCardComponent = props => {
   const [comfort, setComfort] = useState(props.comfort);
@@ -37,7 +38,7 @@ const RoomsCardComponent = props => {
             </h5>
           </CardTitle>
           <CardSubtitle className="ribbon-wrapper text-center">
-            <div className="ribbon-card">{comfort.rank || 'N/A'}</div>
+            <div className="ribbon-card">{(comfort.rank && Rank[comfort.rank]) || Rank.NA}</div>
           </CardSubtitle>
           <CardText>
             <ListGroup>

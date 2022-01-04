@@ -2,10 +2,8 @@ package com.genial.iot.service;
 
 import com.genial.iot.config.Constants;
 import com.genial.iot.config.DateTimeUtil;
-import com.genial.iot.repository.HumidityRepository;
-import com.genial.iot.repository.LightRepository;
-import com.genial.iot.repository.NoiseRepository;
-import com.genial.iot.repository.TemperatureRepository;
+import com.genial.iot.domain.RoomGrade;
+import com.genial.iot.repository.*;
 import com.genial.iot.service.dto.*;
 import java.util.Comparator;
 import java.util.List;
@@ -26,6 +24,7 @@ public class ComfortService {
     private final HumidityRepository humidityRepository;
     private final NoiseRepository noiseRepository;
     private final LightRepository lightRepository;
+    private final RoomGradeRepository roomGradeRepository;
 
     public List<ComfortDTO> searchComfortsByEUStandards(SearchEUComfortDTO searchEUComfortDTO) {
         List<ComfortDTO> comfortDTOs = roomService
@@ -43,8 +42,9 @@ public class ComfortService {
                 setLightForComfortDTO(searchEUComfortDTO.isLight(), e);
                 setNoiseForComfortDTO(searchEUComfortDTO.isNoise(), e);
                 setTemperatureForComfortDTO(searchEUComfortDTO.isTemperature(), e);
+                setRankingForComfortDTO(e);
             })
-            .sorted(Comparator.comparing(ComfortDTO::getTotalPoint).reversed())
+            .sorted(Comparator.comparing(ComfortDTO::getTotalPoint).reversed().thenComparing(ComfortDTO::getRank))
             .collect(Collectors.toList());
     }
 
@@ -64,21 +64,22 @@ public class ComfortService {
                 setLightForComfortDTO(searchUserPreferenceComfortDTO.getLightPriority(), e);
                 setNoiseForComfortDTO(searchUserPreferenceComfortDTO.getNoisePriority(), e);
                 setTemperatureForComfortDTO(searchUserPreferenceComfortDTO.getTemperaturePriority(), e);
+                setRankingForComfortDTO(e);
             })
-            .sorted(Comparator.comparing(ComfortDTO::getTotalPoint).reversed())
+            .sorted(Comparator.comparing(ComfortDTO::getTotalPoint).reversed().thenComparing(ComfortDTO::getRank))
             .collect(Collectors.toList());
     }
 
     private void setTemperatureForComfortDTO(Boolean isTemperature, ComfortDTO comfortDTO) {
-        final Double minTemp = DateTimeUtil.isSummerTimeInEurope()
-            ? Constants.EU_SUMMER_TEMP_MIN_STANDARD
-            : Constants.EU_WINTER_TEMP_MIN_STANDARD;
-        final Double maxTemp = DateTimeUtil.isSummerTimeInEurope()
-            ? Constants.EU_SUMMER_TEMP_MAX_STANDARD
-            : Constants.EU_WINTER_TEMP_MAX_STANDARD;
         temperatureRepository
             .findTopByRoomIdOrderByCreatedDateDesc(comfortDTO.getRoom().getId())
             .ifPresent(e1 -> {
+                final Double minTemp = DateTimeUtil.isSummerTimeInEurope(e1.getCreatedDate())
+                    ? Constants.EU_SUMMER_TEMP_MIN_STANDARD
+                    : Constants.EU_WINTER_TEMP_MIN_STANDARD;
+                final Double maxTemp = DateTimeUtil.isSummerTimeInEurope(e1.getCreatedDate())
+                    ? Constants.EU_SUMMER_TEMP_MAX_STANDARD
+                    : Constants.EU_WINTER_TEMP_MAX_STANDARD;
                 TemperatureDTO temperatureDTO = TemperatureDTO.of(e1);
                 if (isTemperature) {
                     if (e1.getValue() >= minTemp && e1.getValue() <= maxTemp) {
@@ -93,15 +94,15 @@ public class ComfortService {
     }
 
     private void setTemperatureForComfortDTO(double temperaturePriority, ComfortDTO comfortDTO) {
-        final Double minTemp = DateTimeUtil.isSummerTimeInEurope()
-            ? Constants.EU_SUMMER_TEMP_MIN_STANDARD
-            : Constants.EU_WINTER_TEMP_MIN_STANDARD;
-        final Double maxTemp = DateTimeUtil.isSummerTimeInEurope()
-            ? Constants.EU_SUMMER_TEMP_MAX_STANDARD
-            : Constants.EU_WINTER_TEMP_MAX_STANDARD;
         temperatureRepository
             .findTopByRoomIdOrderByCreatedDateDesc(comfortDTO.getRoom().getId())
             .ifPresent(e1 -> {
+                final Double minTemp = DateTimeUtil.isSummerTimeInEurope(e1.getCreatedDate())
+                    ? Constants.EU_SUMMER_TEMP_MIN_STANDARD
+                    : Constants.EU_WINTER_TEMP_MIN_STANDARD;
+                final Double maxTemp = DateTimeUtil.isSummerTimeInEurope(e1.getCreatedDate())
+                    ? Constants.EU_SUMMER_TEMP_MAX_STANDARD
+                    : Constants.EU_WINTER_TEMP_MAX_STANDARD;
                 TemperatureDTO temperatureDTO = TemperatureDTO.of(e1);
                 if (e1.getValue() >= minTemp && e1.getValue() <= maxTemp) {
                     temperatureDTO.setValid(true);
@@ -109,6 +110,15 @@ public class ComfortService {
                 }
                 comfortDTO.setTemperature(temperatureDTO);
             });
+    }
+
+    private void setRankingForComfortDTO(ComfortDTO comfortDTO) {
+        comfortDTO.setRank(
+            roomGradeRepository
+                .findFirstByRoomIdOrderByCreatedDateDesc(comfortDTO.getRoom().getId())
+                .map(RoomGrade::getRank)
+                .orElse(RoomGrade.Rank.NA)
+        );
     }
 
     private void setNoiseForComfortDTO(Boolean isNoise, ComfortDTO comfortDTO) {
@@ -215,16 +225,16 @@ public class ComfortService {
     }
 
     private List<TemperatureDTO> getTop5RecentRecordedTemperatureData(String roomId) {
-        final Double minTemp = DateTimeUtil.isSummerTimeInEurope()
-            ? Constants.EU_SUMMER_TEMP_MIN_STANDARD
-            : Constants.EU_WINTER_TEMP_MIN_STANDARD;
-        final Double maxTemp = DateTimeUtil.isSummerTimeInEurope()
-            ? Constants.EU_SUMMER_TEMP_MAX_STANDARD
-            : Constants.EU_WINTER_TEMP_MAX_STANDARD;
         return temperatureRepository
             .findTop5ByRoomIdOrderByCreatedDateDesc(roomId)
             .stream()
             .map(e1 -> {
+                final Double minTemp = DateTimeUtil.isSummerTimeInEurope(e1.getCreatedDate())
+                    ? Constants.EU_SUMMER_TEMP_MIN_STANDARD
+                    : Constants.EU_WINTER_TEMP_MIN_STANDARD;
+                final Double maxTemp = DateTimeUtil.isSummerTimeInEurope(e1.getCreatedDate())
+                    ? Constants.EU_SUMMER_TEMP_MAX_STANDARD
+                    : Constants.EU_WINTER_TEMP_MAX_STANDARD;
                 TemperatureDTO temperatureDTO = TemperatureDTO.of(e1);
                 if (e1.getValue() >= minTemp && e1.getValue() <= maxTemp) {
                     temperatureDTO.setValid(true);

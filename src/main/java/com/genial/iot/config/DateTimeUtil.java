@@ -1,13 +1,15 @@
 package com.genial.iot.config;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class DateTimeUtil {
 
-    public static boolean isSummerTimeInEurope() {
-        int currentMonth = LocalDate.now().getMonth().getValue();
+    public static boolean isSummerTimeInEurope(Instant timestamp) {
+        int currentMonth = LocalDate.ofInstant(timestamp, ZoneId.of("Europe/Paris")).getMonth().getValue();
         switch (currentMonth) {
             case 11:
             case 12:

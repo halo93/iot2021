@@ -1,6 +1,7 @@
 package com.genial.iot.config;
 
 import com.genial.iot.domain.converter.IntegerToInstantConverter;
+import com.genial.iot.domain.converter.StringToRankConverter;
 import com.github.cloudyrock.spring.v5.EnableMongock;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,7 @@ public class DatabaseConfiguration {
         converters.add(DateToZonedDateTimeConverter.INSTANCE);
         converters.add(ZonedDateTimeToDateConverter.INSTANCE);
         converters.add(new IntegerToInstantConverter());
+        converters.add(new StringToRankConverter());
         return new MongoCustomConversions(converters);
     }
 }
